@@ -58,7 +58,7 @@ def train(epoch):
 
 ### def test()
 
-```python3
+```python
 def test():
     with tf.Session() as sess:
         # Load model
@@ -173,3 +173,6 @@ Accuracy: 96.45%
 - Author: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
 - Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
 
+## License
+
+**MIT**

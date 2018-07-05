@@ -34,3 +34,7 @@ python main.py [-v | --validation]
 
 - Author: *[Kevin](https://github.com/kevin28520)*
 - Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
+
+## License
+
+**MIT**
