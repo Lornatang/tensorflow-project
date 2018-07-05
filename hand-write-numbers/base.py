@@ -56,7 +56,9 @@ def cnn(x, w, b):
 prediction = cnn(X, weights, bias)
 
 # Define loss and optimizer
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=y))
+loss = tf.reduce_mean(
+    tf.nn.softmax_cross_entropy_with_logits(
+        logits=prediction, labels=y))
 optimizer = tf.train.AdamOptimizer(0.001).minimize(loss)
 
 # Initialize the variables (i.e. assign their default value)
@@ -66,13 +68,13 @@ init = tf.global_variables_initializer()
 saver = tf.train.Saver()
 
 
-def train():
+def train(epoch):
     with tf.Session() as sess:
         # Run the initializer
         sess.run(init)
 
         # Loop over all batches
-        for epoch in range(20):
+        for epoch in range(epoch):
             avg_cost = 0.
             total_batch = int(data.train.num_examples / 100)
 
@@ -80,14 +82,16 @@ def train():
             for i in range(total_batch):
                 batch_x, batch_y = data.train.next_batch(100)
 
-                # Run optimization op (backprop) and cost op (to get loss value)
-                _, c = sess.run([optimizer, loss], feed_dict={X: batch_x, y: batch_y})
+                # Run optimization op (backprop) and cost op (to get loss
+                # value)
+                _, c = sess.run([optimizer, loss], feed_dict={
+                                X: batch_x, y: batch_y})
 
                 avg_cost += c / total_batch
 
             # When epoch/1 == 0, display its
             if epoch % 1 == 0:
-                print("Epoch: {}, cost:{:.9f}.".format(epoch+1, avg_cost))
+                print("Epoch: {}, cost:{:.9f}.".format(epoch + 1, avg_cost))
         print("Optimizer finished!")
 
         # Model path
@@ -96,10 +100,19 @@ def train():
 
 
 def test():
-    # Test model
-    correct_prediction = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
+    with tf.Session() as sess:
+        # Load model
+        saver.restore(sess, 'model/model.ckpt')
 
-    # Calculate accuracy
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
+        # Test model
+        correct_prediction = tf.equal(
+            tf.argmax(
+                prediction, 1), tf.argmax(
+                y, 1))
 
-    print("Accuracy: {:.2f}%".format(accuracy.eval({X: data.test.images, y: data.test.labels}) * 100))
+        # Calculate accuracy
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+        # Output accuracy
+        print("Accuracy: {:.2f}%".format(accuracy.eval(
+            {X: data.test.images, y: data.test.labels}) * 100))
