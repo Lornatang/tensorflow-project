@@ -3,7 +3,7 @@
 """
 
 # Author: Changyu Liu <Shiyipaisizuo@gmail.com>
-# Last modified: 2018-07-04
+# Last modified: 2018-07-05
 # LICENSE: MIT
 
 # Import the appropriate libraries
