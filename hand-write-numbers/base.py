@@ -34,6 +34,14 @@ bias = {
 
 # Create cnn model
 def cnn(x, w, b):
+    """
+    Args:
+        x: input image
+        w: neural network
+        b: image biases
+    Returns:
+        Out: out with linear activation
+        """
     # Hidden layer with RELU activation
     layer_1 = tf.add(tf.matmul(x, w['w1']), b['b1'])
     layer_1 = tf.nn.relu(layer_1)
