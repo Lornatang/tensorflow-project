@@ -8,7 +8,11 @@ Most of them come from online cases.
 
 ## Index
 
-### pause
+1. **Tensorflow for mnist** ([code](https://github.com/shiyipaisizuo/tensorflow-project/tree/master/hand-write-numbers)).
+Build a convolutional neural network to classify MNIST digits dataset. Raw TensorFlow implementation.
+
+2. **cats vs dogs** ([code](https://github.com/shiyipaisizuo/tensorflow-project/tree/master/cats_dogs)).
+This is the dog and cat recognition contest on kaggle, which USES tensorflow to implement two convolutional neural networks to identify images
 
 ## Dataset
 

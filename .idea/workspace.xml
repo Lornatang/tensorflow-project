@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7e37cd87-f40f-4c95-b829-4ea448210aeb" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hand-write-numbers/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/hand-write-numbers/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,36 +19,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SECOND">
-              <first_editor relative-caret-position="616">
-                <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hand-write-numbers/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="656">
-                <caret line="183" column="81" selection-start-line="183" selection-start-column="81" selection-end-line="183" selection-end-column="81" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="448">
-                <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="325">
+                <caret line="14" column="142" selection-start-line="14" selection-start-column="142" selection-end-line="14" selection-end-column="142" />
               </first_editor>
               <second_editor />
             </state>
@@ -95,9 +68,9 @@
         <option value="$PROJECT_DIR$/cats_dogs/input_data.py" />
         <option value="$PROJECT_DIR$/cats_dogs/base.py" />
         <option value="$PROJECT_DIR$/cats_dogs/introduce.md" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/hand-write-numbers/README.md" />
         <option value="$PROJECT_DIR$/cats_dogs/README.md" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -379,11 +352,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/cats_dogs/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SECOND">
-          <first_editor relative-caret-position="616">
-            <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="768">
+            <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
           </first_editor>
           <second_editor />
         </state>
@@ -399,11 +372,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cats_dogs/README.md">
+    <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="448">
-            <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="325">
+            <caret line="14" column="142" selection-start-line="14" selection-start-column="142" selection-end-line="14" selection-end-column="142" />
           </first_editor>
           <second_editor />
         </state>
