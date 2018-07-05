@@ -4,11 +4,16 @@
       <w>backprop</w>
       <w>changyu</w>
       <w>ckpt</w>
+      <w>conv</w>
+      <w>dataset</w>
+      <w>logits</w>
       <w>lstm</w>
       <w>mnist</w>
+      <w>ndarray</w>
       <w>relu</w>
       <w>rnnlm</w>
       <w>shiyipaisizuo</w>
+      <w>softmax</w>
     </words>
   </dictionary>
 </component>

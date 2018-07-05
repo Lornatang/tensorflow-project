@@ -5,6 +5,8 @@
       <option name="ignoredErrors">
         <list>
           <option value="N814" />
+          <option value="N806" />
+          <option value="N803" />
         </list>
       </option>
     </inspection_tool>
@@ -16,6 +18,11 @@
           <option value="train" />
           <option value="base" />
           <option value="argparse.ArgumentParser.*" />
+          <option value="tensorflow.examples.tutorials.mnist.input_data" />
+          <option value="train_test_split" />
+          <option value="PIL.Image" />
+          <option value="input_data" />
+          <option value="os.*" />
         </list>
       </option>
     </inspection_tool>
