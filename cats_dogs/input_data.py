@@ -11,14 +11,21 @@ import numpy as np
 import os
 
 
-# you need to change this to your data directory
+# data directory
 train_dir = './data/train/'
+BATCH_SIZE = 2
+CAPACITY = 256
+IMG_W = 208
+IMG_H = 208
 
 
 def get_files(file_dir):
     """
+        Get the data you need to train
+    ====================
     Args:
         file_dir: file directory
+    ====================
     Returns:
         list of images and labels
     """
@@ -34,51 +41,48 @@ def get_files(file_dir):
         else:
             dogs.append(file_dir + file)
             label_dogs.append(1)
-    print('There are %d cats\nThere are %d dogs' % (len(cats), len(dogs)))
+    print("There are {} cats\nThere are {} dogs".format(len(cats), len(dogs)))
 
-    image_list = np.hstack((cats, dogs))
-    label_list = np.hstack((label_cats, label_dogs))
+    img_list = np.hstack((cats, dogs))
+    labels_list = np.hstack((label_cats, label_dogs))
 
-    temp = np.array([image_list, label_list])
+    temp = np.array([img_list, labels_list])
     temp = temp.transpose()
     np.random.shuffle(temp)
 
-    image_list = list(temp[:, 0])
-    label_list = list(temp[:, 1])
-    label_list = [int(i) for i in label_list]
+    img_list = list(temp[:, 0])
+    labels_list = list(temp[:, 1])
+    labels_list = [int(k) for k in labels_list]
 
-    return image_list, label_list
+    return img_list, labels_list
 
 
-# %%
-
-def get_batch(image, label, image_W, image_H, batch_size, capacity):
+def get_batch(image, labels, image_W, image_H, batch_size, capacity):
     """
+        Get the batch training size
+    ====================
     Args:
         image: list type
-        label: list type
+        labels: list type
         image_W: image width
         image_H: image height
         batch_size: batch size
         capacity: the maximum elements in queue
+    ====================
     Returns:
         image_batch: 4D tensor [batch_size, width, height, 3], dtype=tf.float32
         label_batch: 1D tensor [batch_size], dtype=tf.int32
     """
 
     image = tf.cast(image, tf.string)
-    label = tf.cast(label, tf.int32)
+    labels = tf.cast(labels, tf.int32)
 
     # make an input queue
-    input_queue = tf.train.slice_input_producer([image, label])
+    input_queue = tf.train.slice_input_producer([image, labels])
 
-    label = input_queue[1]
+    labels = input_queue[1]
     image_contents = tf.read_file(input_queue[0])
     image = tf.image.decode_jpeg(image_contents, channels=3)
-
-    ######################################
-    # data argumentation should go to here
-    ######################################
 
     image = tf.image.resize_image_with_crop_or_pad(image, image_W, image_H)
 
@@ -86,29 +90,16 @@ def get_batch(image, label, image_W, image_H, batch_size, capacity):
     # comment the following line.
     image = tf.image.per_image_standardization(image)
 
-    image_batch, label_batch = tf.train.batch([image, label],
-                                              batch_size=batch_size,
-                                              num_threads=64,
-                                              capacity=capacity)
+    img_batch, labels_batch = tf.train.batch([image, labels],
+                                             batch_size=batch_size,
+                                             num_threads=64,
+                                             capacity=capacity)
 
-    image_batch, label_batch = tf.train.shuffle_batch([image, label],
-                                                      batch_size=BATCH_SIZE,
-                                                      num_threads=64,
-                                                      capacity=CAPACITY,
-                                                      min_after_dequeue=CAPACITY - 1)
+    labels_batch = tf.reshape(labels_batch, [batch_size])
+    img_batch = tf.cast(img_batch, tf.float32)
 
-    label_batch = tf.reshape(label_batch, [batch_size])
-    image_batch = tf.cast(image_batch, tf.float32)
+    return img_batch, labels_batch
 
-    return image_batch, label_batch
-
-
-BATCH_SIZE = 2
-CAPACITY = 256
-IMG_W = 208
-IMG_H = 208
-
-train_dir = './data/train/'
 
 image_list, label_list = get_files(train_dir)
 image_batch, label_batch = get_batch(
@@ -126,11 +117,11 @@ with tf.Session() as sess:
 
             # just test one batch
             for j in np.arange(BATCH_SIZE):
-                print('label: %d' % label[j])
+                print("label: {}".format(label[j]))
             i += 1
 
     except tf.errors.OutOfRangeError:
-        print('done!')
+        print("Done!")
     finally:
         coord.request_stop()
     coord.join(threads)
