@@ -10,10 +10,12 @@
       <w>lstm</w>
       <w>mnist</w>
       <w>ndarray</w>
+      <w>quickstart</w>
       <w>relu</w>
       <w>rnnlm</w>
       <w>shiyipaisizuo</w>
       <w>softmax</w>
+      <w>tensorflow</w>
     </words>
   </dictionary>
 </component>

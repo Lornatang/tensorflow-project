@@ -10,8 +10,7 @@
 
 # The data
 
-- Data: The cats vs. dogs dataset from Kaggle were used
-- Download link: https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition/data
+Official Website: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
 
 # The goal
 
@@ -32,9 +31,10 @@ python main.py [-T | --train]
 python main.py [-v | --validation]
 ```
 
-- Author: *[Kevin](https://github.com/kevin28520)*
-- Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
-
 ## License
 
 **MIT**
+
+**Author: *[Kevin](https://github.com/kevin28520)***
+
+**Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo/tensorflow-project)***

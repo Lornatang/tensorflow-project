@@ -1,5 +1,10 @@
 # Function instructions
 
+# The data
+
+- Data: The cats vs. dogs dataset from Kaggle were used
+- Download link: https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition/data
+
 ## Directory tree
 ```text
 ├── __init__.py
@@ -170,9 +175,10 @@ Model save path---->model/model.ckpt
 Accuracy: 96.45%
 ```
 
-- Author: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
-- Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo)*
-
 ## License
 
 **MIT**
+
+**Author: *[Shiyipaisizuo](https://github.com/shiyipaisizuo/tensorflow-project)***
+
+**Audit: *[Shiyipaisizuo](https://github.com/shiyipaisizuo/tensorflow-project)***
