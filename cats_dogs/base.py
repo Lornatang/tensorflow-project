@@ -60,7 +60,7 @@ def run_training():
 
             if step % 50 == 0:
                 print(
-                    "Step %d, ".format(step),
+                    "Step {}, ".format(step),
                     "train loss = {:.2f}, ".format(tra_loss),
                     "train accuracy = {:.2f}%".format(tra_acc * 100.0))
                 summary_str = sess.run(summary_op)

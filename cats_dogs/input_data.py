@@ -41,7 +41,6 @@ def get_files(file_dir):
         else:
             dogs.append(file_dir + file)
             label_dogs.append(1)
-    print("There are {} cats\nThere are {} dogs".format(len(cats), len(dogs)))
 
     img_list = np.hstack((cats, dogs))
     labels_list = np.hstack((label_cats, label_dogs))
