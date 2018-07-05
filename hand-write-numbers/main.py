@@ -27,8 +27,6 @@ def main():
         base.train(50)
     elif args.test:
         base.test()
-    else:
-        args.format_usage()
 
 
 if __name__ == '__main__':
