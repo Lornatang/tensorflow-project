@@ -15,6 +15,7 @@
       <w>mnist</w>
       <w>ndarray</w>
       <w>preprocess</w>
+      <w>pylint</w>
       <w>quickstart</w>
       <w>relu</w>
       <w>resized</w>

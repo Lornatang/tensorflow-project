@@ -24,6 +24,8 @@
           <option value="input_data" />
           <option value="os.*" />
           <option value="cnn" />
+          <option value="sys" />
+          <option value="math" />
         </list>
       </option>
     </inspection_tool>
