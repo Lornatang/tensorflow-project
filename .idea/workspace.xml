@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e37cd87-f40f-4c95-b829-4ea448210aeb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cifar10/train_test_split.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/input_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/train_test_split.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/cnn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hand-write-numbers/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/hand-write-numbers/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hand-write-numbers/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/hand-write-numbers/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,46 +22,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/main.py">
+      <file leaf-file-name="train_test_split.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cifar10/train_test_split.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
+            <state relative-caret-position="470">
+              <caret line="48" selection-start-line="48" selection-end-line="48" />
               <folding>
-                <element signature="e#130#145#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_test_split.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/train_test_split.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
-              <folding>
-                <element signature="e#144#167#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cnn.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/cnn.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="108" column="41" selection-start-line="108" selection-start-column="41" selection-end-line="108" selection-end-column="41" />
-              <folding>
-                <element signature="e#144#153#0" expanded="true" />
+                <element signature="e#68#77#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -96,9 +62,7 @@
         <option value="$PROJECT_DIR$/hand-write-numbers/introduce.md" />
         <option value="$PROJECT_DIR$/face_recognition/base.py" />
         <option value="$PROJECT_DIR$/face/base.py" />
-        <option value="$PROJECT_DIR$/hand-write-numbers/base.py" />
         <option value="$PROJECT_DIR$/cats_dogs/model.py" />
-        <option value="$PROJECT_DIR$/hand-write-numbers/main.py" />
         <option value="$PROJECT_DIR$/cats_dogs/__init__.py" />
         <option value="$PROJECT_DIR$/cats_dogs/input_data.py" />
         <option value="$PROJECT_DIR$/cats_dogs/introduce.md" />
@@ -112,6 +76,9 @@
         <option value="$PROJECT_DIR$/cats_dogs/train_test_split.py" />
         <option value="$PROJECT_DIR$/cats_dogs/cnn.py" />
         <option value="$PROJECT_DIR$/cats_dogs/base.py" />
+        <option value="$PROJECT_DIR$/hand-write-numbers/base.py" />
+        <option value="$PROJECT_DIR$/hand-write-numbers/main.py" />
+        <option value="$PROJECT_DIR$/cifar10/train_test_split.py" />
       </list>
     </option>
   </component>
@@ -146,7 +113,7 @@
             <path>
               <item name="tensorflow-project" type="b2602c69:ProjectViewProjectNode" />
               <item name="tensorflow-project" type="462c0819:PsiDirectoryNode" />
-              <item name="cats_dogs" type="462c0819:PsiDirectoryNode" />
+              <item name="cifar10" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -224,7 +191,14 @@
       <option name="project" value="LOCAL" />
       <updated>1530848342072</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix error">
+      <created>1530851384268</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1530851384268</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -374,26 +348,6 @@
     <entry file="file://$PROJECT_DIR$/cifar10.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/hand-write-numbers/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2270">
-          <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
-          <folding>
-            <element signature="e#173#196#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hand-write-numbers/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
-          <folding>
-            <element signature="e#130#145#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hand-write-numbers/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -451,12 +405,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/hand-write-numbers/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="13" column="44" selection-start-line="13" selection-start-column="44" selection-end-line="13" selection-end-column="44" />
+          <folding>
+            <element signature="e#173#196#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hand-write-numbers/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="26" column="21" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
+          <folding>
+            <element signature="e#130#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cats_dogs/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
+        <state relative-caret-position="2481">
           <caret line="108" column="41" selection-start-line="108" selection-start-column="41" selection-end-line="108" selection-end-column="41" />
           <folding>
             <element signature="e#144#153#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cifar10/train_test_split.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="470">
+          <caret line="48" selection-start-line="48" selection-end-line="48" />
+          <folding>
+            <element signature="e#68#77#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -8,17 +8,21 @@
       <w>conv</w>
       <w>convolutional</w>
       <w>dataset</w>
+      <w>filenames</w>
       <w>kriz</w>
       <w>logits</w>
       <w>lstm</w>
       <w>mnist</w>
       <w>ndarray</w>
+      <w>preprocess</w>
       <w>quickstart</w>
       <w>relu</w>
+      <w>resized</w>
       <w>rnnlm</w>
       <w>shiyipaisizuo</w>
       <w>softmax</w>
       <w>tensorflow</w>
+      <w>uint</w>
     </words>
   </dictionary>
 </component>
