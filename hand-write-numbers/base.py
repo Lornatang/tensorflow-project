@@ -11,7 +11,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 # Load mnist data
-data = input_data.read_data_sets('./data/', one_hot=True)
+data = input_data.read_data_sets('/tmp/mnist/', one_hot=True)
 
 # tf Graph input
 X = tf.placeholder('float', [None, 784])

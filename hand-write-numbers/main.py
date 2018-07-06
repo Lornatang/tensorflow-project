@@ -24,7 +24,7 @@ def main():
         action="store_true")
     args = parser.parse_args()
     if args.train:
-        base.train(50)
+        base.train(100)
     elif args.test:
         base.test()
 
