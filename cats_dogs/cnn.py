@@ -2,8 +2,8 @@
     Custom training, validation
 """
 
-# Author: Kevin <https://github.com/kevin28520>
-# Last modified: 2018-07-05
+# Author: Changyu Liu <shiyipaisizuo@gmail.com>
+# Last modified: 2018-07-06
 # LICENSE: MIT
 
 import tensorflow as tf

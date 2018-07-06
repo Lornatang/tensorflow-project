@@ -3,7 +3,7 @@
 """
 
 # Author: Changyu Liu <Shiyipaisizuo@gmail.com>
-# Last modified: 2018-07-05
+# Last modified: 2018-07-06
 # LICENSE: MIT
 
 import os
@@ -11,8 +11,8 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 
-import input_data
-import model
+import train_test_split
+import cnn
 
 
 N_CLASSES = 2  # dogs and cats
@@ -30,18 +30,18 @@ def run_training():
     train_dir = './data/train/'
     logs_train_dir = './logs/train/'
 
-    train, train_label = input_data.get_files(train_dir)
+    train, train_label = train_test_split.get_files(train_dir)
 
-    train_batch, train_label_batch = input_data.get_batch(train,
-                                                          train_label,
-                                                          IMG_W,
-                                                          IMG_H,
-                                                          BATCH_SIZE,
-                                                          CAPACITY)
-    train_logits = model.inference(train_batch, BATCH_SIZE, N_CLASSES)
-    train_loss = model.losses(train_logits, train_label_batch)
-    train_op = model.training(train_loss, learning_rate)
-    train__acc = model.evaluation(train_logits, train_label_batch)
+    train_batch, train_label_batch = train_test_split.get_batch(train,
+                                                                train_label,
+                                                                IMG_W,
+                                                                IMG_H,
+                                                                BATCH_SIZE,
+                                                                CAPACITY)
+    train_logits = cnn.inference(train_batch, BATCH_SIZE, N_CLASSES)
+    train_loss = cnn.losses(train_logits, train_label_batch)
+    train_op = cnn.training(train_loss, learning_rate)
+    train__acc = cnn.evaluation(train_logits, train_label_batch)
 
     summary_op = tf.summary.merge_all()
     sess = tf.Session()
@@ -79,7 +79,7 @@ def run_training():
     sess.close()
 
 
-def get_one_image(train):
+def get_image(train):
     """
         Randomly pick one image from training data
     ====================
@@ -99,15 +99,15 @@ def get_one_image(train):
     return image
 
 
-def evaluate_one_image():
+def evaluate():
     """
         Test one image against the saved models and parameters
     """
 
     # you need to change the directories to yours.
     train_dir = './data/train/'
-    train, train_label = input_data.get_files(train_dir)
-    image_array = get_one_image(train)
+    train, train_label = train_test_split.get_files(train_dir)
+    image_array = get_image(train)
 
     with tf.Graph().as_default():
         batch_size = 1
@@ -116,7 +116,7 @@ def evaluate_one_image():
         image = tf.cast(image_array, tf.float32)
         image = tf.image.per_image_standardization(image)
         image = tf.reshape(image, [1, 208, 208, 3])
-        logits = model.inference(image, batch_size, n_classes)
+        logits = cnn.inference(image, batch_size, n_classes)
 
         logits = tf.nn.softmax(logits)
 

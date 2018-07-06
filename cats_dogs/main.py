@@ -3,7 +3,7 @@
 """
 
 # Author: Changyu Liu <Shiyipaisizuo@gmail.com>
-# Last modified: 2018-07-05
+# Last modified: 2018-07-06
 # LICENSE: MIT
 
 import argparse
@@ -28,7 +28,7 @@ def main():
     if args.train:
         base.run_training()
     elif args.validation:
-        base.evaluate_one_image()
+        base.evaluate()
 
 
 if __name__ == '__main__':

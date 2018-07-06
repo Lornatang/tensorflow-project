@@ -23,6 +23,7 @@
           <option value="PIL.Image" />
           <option value="input_data" />
           <option value="os.*" />
+          <option value="cnn" />
         </list>
       </option>
     </inspection_tool>

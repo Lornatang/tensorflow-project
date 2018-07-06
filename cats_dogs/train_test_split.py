@@ -3,7 +3,7 @@
 """
 
 # Author: Changyu Liu <Shiyipaisizuo@gmail.com>
-# Last modified: 2018-07-05
+# Last modified: 2018-07-06
 # LICENSE: MIT
 
 import tensorflow as tf
