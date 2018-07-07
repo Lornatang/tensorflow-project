@@ -4,12 +4,9 @@
     <list default="true" id="7e37cd87-f40f-4c95-b829-4ea448210aeb" name="Default" comment="first commit">
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cats_dogs/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cats_dogs/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar10/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cifar10/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cifar10/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/cifar10/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cifar10/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/cifar10/eval.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cifar10/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/cifar10/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hand-write-numbers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/hand-write-numbers/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,47 +22,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="eval.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="eval.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cifar10/eval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2328">
-              <caret line="97" column="29" selection-start-line="97" selection-start-column="29" selection-end-line="97" selection-end-column="29" />
+            <state relative-caret-position="394">
+              <caret line="125" column="11" lean-forward="true" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
               <folding>
                 <element signature="e#128#157#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cifar10/train.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1743">
-              <caret line="98" column="8" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="8" />
-              <folding>
-                <element signature="e#661#690#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cifar10/base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8328">
-              <caret line="347" column="7" selection-start-line="347" selection-start-column="7" selection-end-line="347" selection-end-column="7" />
-              <folding>
-                <element signature="e#41#50#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cats_dogs/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -113,12 +77,12 @@
         <option value="$PROJECT_DIR$/hand-write-numbers/base.py" />
         <option value="$PROJECT_DIR$/hand-write-numbers/main.py" />
         <option value="$PROJECT_DIR$/cifar10/train_test_split.py" />
-        <option value="$PROJECT_DIR$/cifar10/base.py" />
-        <option value="$PROJECT_DIR$/cifar10/eval.py" />
-        <option value="$PROJECT_DIR$/cifar10/train.py" />
         <option value="$PROJECT_DIR$/cifar10/__init__.py" />
         <option value="$PROJECT_DIR$/hand-write-numbers/__init__.py" />
         <option value="$PROJECT_DIR$/cats_dogs/__init__.py" />
+        <option value="$PROJECT_DIR$/cifar10/base.py" />
+        <option value="$PROJECT_DIR$/cifar10/train.py" />
+        <option value="$PROJECT_DIR$/cifar10/eval.py" />
       </list>
     </option>
   </component>
@@ -149,11 +113,6 @@
             <path>
               <item name="tensorflow-project" type="b2602c69:ProjectViewProjectNode" />
               <item name="tensorflow-project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tensorflow-project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tensorflow-project" type="462c0819:PsiDirectoryNode" />
-              <item name="cats_dogs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tensorflow-project" type="b2602c69:ProjectViewProjectNode" />
@@ -264,37 +223,44 @@
       <option name="project" value="LOCAL" />
       <updated>1530867779931</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fix __init.py">
+      <created>1530942139589</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1530942139589</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.50143063" side_tool="true" weight="0.32969698" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32969698" />
-      <window_info anchor="bottom" id="Python Console" order="11" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4985694" weight="0.32969698" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32969698" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2453505" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="bottom" id="Event Log" order="13" sideWeight="0.50143063" side_tool="true" weight="0.32969698" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969698" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4985694" weight="0.32969698" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32969698" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2453505" />
       <window_info anchor="right" id="R Packages" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="4" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969698" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32969698" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,7 +283,8 @@
     <MESSAGE value="first commit and convert python3" />
     <MESSAGE value="fix error" />
     <MESSAGE value="first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+    <MESSAGE value="fix __init.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix __init.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -500,32 +467,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cifar10/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1743">
-          <caret line="98" column="8" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="8" />
-          <folding>
-            <element signature="e#661#690#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cifar10/train_test_split.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-510">
           <caret line="120" column="4" selection-start-line="120" selection-start-column="4" selection-end-line="120" selection-end-column="24" />
           <folding>
             <element signature="e#68#77#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cifar10/eval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2328">
-          <caret line="97" column="29" selection-start-line="97" selection-start-column="29" selection-end-line="97" selection-end-column="29" />
-          <folding>
-            <element signature="e#128#157#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -544,20 +491,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cats_dogs/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cifar10/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8328">
-          <caret line="347" column="7" selection-start-line="347" selection-start-column="7" selection-end-line="347" selection-end-column="7" />
+        <state relative-caret-position="7752">
+          <caret line="323" column="24" selection-start-line="323" selection-start-column="24" selection-end-line="323" selection-end-column="24" />
           <folding>
             <element signature="e#41#50#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cats_dogs/__init__.py">
+    <entry file="file://$PROJECT_DIR$/cifar10/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+        <state relative-caret-position="-532">
+          <caret line="63" column="16" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="16" />
+          <folding>
+            <element signature="e#661#690#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cifar10/eval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="125" column="11" lean-forward="true" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
+          <folding>
+            <element signature="e#128#157#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
