@@ -99,7 +99,7 @@ def train():
                 mon_sess.run(train_op)
 
 
-def main():
+def main(argv=None):
     base.maybe_download_and_extract()
     if tf.gfile.Exists(FLAGS.train_dir):
         tf.gfile.DeleteRecursively(FLAGS.train_dir)

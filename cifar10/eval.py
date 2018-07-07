@@ -123,7 +123,7 @@ def evaluate():
             time.sleep(FLAGS.eval_interval_secs)
 
 
-def main():
+def main(argv=None):
     base.maybe_download_and_extract()
     if tf.gfile.Exists(FLAGS.eval_dir):
         tf.gfile.DeleteRecursively(FLAGS.eval_dir)
