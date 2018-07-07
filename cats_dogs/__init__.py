@@ -1,1 +1,4 @@
-__all__ = ['input_data.py', 'model.py','base.py', 'main.py']
+import input_data.py
+import model.py
+import base.py
+import main.py']
