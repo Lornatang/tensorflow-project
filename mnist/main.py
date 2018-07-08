@@ -28,7 +28,10 @@ def conv2d(x, W):
 
 def max_pool_2x2(x):
     # 这里都是横竖降成一半，每二个取灰度最大的那个，保留最显著的特征
-    return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+    return tf.nn.max_pool(
+        x, ksize=[
+            1, 2, 2, 1], strides=[
+            1, 2, 2, 1], padding='SAME')
 
 
 # 因为卷积会利用到空间信息，所以要将1D的转化为2D的，所以要把数据给的1*784转为28*28d的
@@ -36,6 +39,7 @@ def max_pool_2x2(x):
 # None表示不限输入维度
 x = tf.placeholder(tf.float32, [None, 784])
 y_ = tf.placeholder(tf.float32, [None, 10])
+
 x_image = tf.reshape(x, [-1, 28, 28, 1])
 
 # 定义第一个卷积层
@@ -72,7 +76,7 @@ b_fc2 = bias_variable([10])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 # 定义损失函数，使用优化器Adam，学习率设为1e-4
-# 这里的resuce_mean就是普通的均值，不传axis就默认全局均值
+# 这里的reduce_mean就是普通的均值，不传axis就默认全局均值
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y_conv),
                                               reduction_indices=[1]))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
@@ -80,30 +84,26 @@ train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 # 定义评测准确率
 # tf.argmax就是从一个Tensor中找到值最大的序号
 # equal判断相等就返回True
-# tf.cast把correct_prdiction的bool转成float32，e.g.[1,0,1,0]
+# tf.cast把correct_prediction的bool转成float32，e.g.[1,0,1,0]
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 # 开始训练，初始化所有参数
-# keep_prob=o.5,mini-batch50,iter=20000（注，cpu跑这个量还是有点蛋疼）,样本数量为100w，每100次对准确率进行评估
-# 添加用于初始化变量的节点，然后求出来
-tf.global_variables_initializer().run()
-for i in range(20000):
-    # batch队列
-    batch = mnist.train.next_batch(50)
-    if i % 100 == 0:
-        # t.eval()时，等价于：tf.get_default_session().run(t)
-        # accuracy run不影响训练
-        train_accuracy = accuracy.eval(feed_dict={x: batch[0], y_: batch[1],
-                                                  keep_prob: 1.0})
-        print("step %d, training accuracy %g" % (i, train_accuracy))
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    for i in range(2000):
+        # batch队列
+        batch = mnist.train.next_batch(50)
+        if i % 100 == 0:
+            # t.eval()时，等价于：tf.get_default_session().run(t)
+            # accuracy run不影响训练
+            train_accuracy = accuracy.eval(feed_dict={x: batch[0],
+                                                      y_: batch[1],
+                                                      keep_prob: 1.0})
+            print("step %d, training accuracy %g" % (i, train_accuracy))
     # train_step run就会改变值了
-    train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+        train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-print(
-    "test accuracy :%g" %
-    accuracy.eval(
-        feed_dict={
-            x: mnist.test.images,
-            y_: mnist.test.labels,
-            keep_prob: 1.0}))
+    print("test accuracy :%g" % accuracy.eval(feed_dict={x: mnist.test.images,
+                                                         y_: mnist.test.labels,
+                                                         keep_prob: 1.0}))
