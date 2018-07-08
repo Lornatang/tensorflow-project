@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="mac">
     <words>
+      <w>accurary</w>
       <w>argmax</w>
       <w>backprop</w>
       <w>changyu</w>
@@ -13,12 +14,14 @@
       <w>dtype</w>
       <w>filenames</w>
       <w>filepath</w>
+      <w>grayscale</w>
       <w>iters</w>
       <w>kriz</w>
       <w>logits</w>
       <w>lstm</w>
       <w>mnist</w>
       <w>ndarray</w>
+      <w>overfitting</w>
       <w>preprocess</w>
       <w>pylint</w>
       <w>quickstart</w>
