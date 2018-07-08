@@ -1,3 +1,11 @@
+"""
+    Building neural networks and computing.
+"""
+
+# Author: Changyu Liu <Shiyipaisizuo@gmail.com>
+# Last modified: 2018-07-09
+# LICENSE: MIT
+
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
