@@ -124,7 +124,6 @@ def training():
                 X: batch[0],
                 y: batch[1],
                 keep_prob: 0.75})
-
         saver.save(sess, SAVE_PATH)
         print(f"Model path to: {SAVE_PATH}")
 

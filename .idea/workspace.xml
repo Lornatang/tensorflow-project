@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e37cd87-f40f-4c95-b829-4ea448210aeb" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/mnist/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mnist/evaluate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mnist/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/mac.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mnist/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mnist/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/mnist/base.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,8 +27,8 @@
       <file leaf-file-name="base.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mnist/base.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state relative-caret-position="396">
+              <caret line="126" column="8" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="8" />
               <folding>
                 <element signature="e#0#58#0" expanded="true" />
               </folding>
@@ -328,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1531054207742</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="This is best!">
+      <created>1531061894693</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1531061894693</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -385,7 +387,8 @@
     <MESSAGE value="fix off" />
     <MESSAGE value="fix update" />
     <MESSAGE value="I do not modify fuck this code.!" />
-    <option name="LAST_COMMIT_MESSAGE" value="I do not modify fuck this code.!" />
+    <MESSAGE value="This is best!" />
+    <option name="LAST_COMMIT_MESSAGE" value="This is best!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -606,8 +609,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mnist/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        <state relative-caret-position="396">
+          <caret line="126" column="8" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="8" />
           <folding>
             <element signature="e#0#58#0" expanded="true" />
           </folding>
