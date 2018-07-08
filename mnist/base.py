@@ -1,8 +1,6 @@
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
-# Load the data
-mnist = input_data.read_data_sets("/tmp/mnist/", one_hot=True)
 
 MAX_EPOCH = 25000  # Maximum number of epoch.
 DISPLAY_STEP = 1000  # Output when running to 1000 integers.
@@ -10,7 +8,11 @@ BATCH_SIZE = 64  # How many pictures to train at one time.
 IMAGE_WEIGHT = 28
 IMAGE_HEIGHT = 28
 N_CLASSES = 10
-SAVE_PATH = '/tmp/mnist.ckpt'
+SAVE_PATH = '/tmp/mnist/model.ckpt'
+TRAIN_DIR = '/tmp/mnist/'
+
+# Load the data
+mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
 
 
 # The initialization function that defines the weight and offset is
@@ -125,7 +127,7 @@ def training():
                 y: batch[1],
                 keep_prob: 0.75})
         saver.save(sess, SAVE_PATH)
-        print(f"Model path to: {SAVE_PATH}")
+        print(f"Model save path to: {SAVE_PATH}")
 
 
 def evaluate():
@@ -134,7 +136,7 @@ def evaluate():
         sess.run(init)
 
         saver.restore(sess, SAVE_PATH)
-        print(f"Model restore sess from : {SAVE_PATH}")
+        print(f"Model restore from : {SAVE_PATH}")
         acc = accuracy.eval(feed_dict={X: mnist.test.images,
                                        y: mnist.test.labels,
                                        keep_prob: 1.0})
