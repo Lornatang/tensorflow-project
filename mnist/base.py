@@ -8,6 +8,7 @@
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
+from PIL import Image, ImageFilter
 
 
 MAX_EPOCH = 25000  # Maximum number of epoch.
@@ -16,11 +17,8 @@ BATCH_SIZE = 64  # How many pictures to train at one time.
 IMAGE_WEIGHT = 28
 IMAGE_HEIGHT = 28
 N_CLASSES = 10
-SAVE_PATH = '/tmp/mnist/model.ckpt'
+SAVE_PATH = '../../model/mnist/model.ckpt'
 TRAIN_DIR = '/tmp/mnist/'
-
-# Load the data
-mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
 
 
 # The initialization function that defines the weight and offset is
@@ -119,6 +117,8 @@ init = tf.global_variables_initializer()
 
 # Start training
 def training():
+    # Load the data
+    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
     with tf.Session() as sess:
         # Initialize all variables
         sess.run(init)
@@ -139,6 +139,8 @@ def training():
 
 
 def evaluate():
+    # Load the data
+    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
     with tf.Session() as sess:
         # Initialize all variables
         sess.run(init)
@@ -149,3 +151,30 @@ def evaluate():
                                        y: mnist.test.labels,
                                        keep_prob: 1.0})
         print(f"Acc: {acc:.4f}")
+
+
+def read_data():
+    im = Image.open('./data/2.png')  # 读取的图片所在路径，注意是28*28像素
+    im = im.convert('L')
+    tv = list(im.getdata())
+    tva = [(255 - x) * 1.0 / 255.0 for x in tv]
+    return tva
+
+
+result = read_data()
+
+
+def test():
+    with tf.Session() as sess:
+        sess.run(init)
+        # Using the model, the parameters are consistent with the previous code
+        saver.restore(sess, SAVE_PATH)
+
+        prediction = tf.argmax(y_conv, 1)
+        predint = prediction.eval(
+            feed_dict={
+                X: [result],
+                keep_prob: 1.0},
+            session=sess)
+
+        print("识别结果:", predint[0])
