@@ -12,6 +12,7 @@
       <w>dataset</w>
       <w>dest</w>
       <w>dtype</w>
+      <w>estim</w>
       <w>filenames</w>
       <w>filepath</w>
       <w>grayscale</w>
@@ -22,8 +23,10 @@
       <w>mnist</w>
       <w>ndarray</w>
       <w>overfitting</w>
+      <w>pred</w>
       <w>predint</w>
       <w>preprocess</w>
+      <w>probas</w>
       <w>pylint</w>
       <w>quickstart</w>
       <w>relu</w>

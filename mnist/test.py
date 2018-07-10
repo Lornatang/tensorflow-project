@@ -10,7 +10,7 @@ import base
 import tensorflow as tf
 
 
-def main():
+def main(argv=None):
     base.test()
 
 

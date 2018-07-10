@@ -161,20 +161,20 @@ def read_data():
     return tva
 
 
-result = read_data()
-
-
 def test():
+    # Load the data
+    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
     with tf.Session() as sess:
         sess.run(init)
         # Using the model, the parameters are consistent with the previous code
         saver.restore(sess, SAVE_PATH)
+        # result = list(mnist.test.images)
 
         prediction = tf.argmax(y_conv, 1)
         predint = prediction.eval(
             feed_dict={
-                X: [result],
+                X: mnist.test.images,
                 keep_prob: 1.0},
             session=sess)
 
-        print("识别结果:", predint[0])
+        print("识别结果:", predint[0:100])
