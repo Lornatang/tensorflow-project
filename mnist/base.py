@@ -8,7 +8,7 @@
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
-from PIL import Image, ImageFilter
+from PIL import Image
 
 
 MAX_EPOCH = 25000  # Maximum number of epoch.
