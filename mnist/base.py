@@ -116,41 +116,40 @@ init = tf.global_variables_initializer()
 
 
 with tf.Session() as sess:
-    tf.device('gpu:0'):
-        # Load the data
-        mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
-        with tf.Session() as sess:
-            # Initialize all variables
-            sess.run(init)
+    tf.device('gpu:0')
+    # Load the data
+    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
+    # Initialize all variables
+    sess.run(init)
 
-            for i in range(MAX_EPOCH + 1):
-                batch = mnist.train.next_batch(BATCH_SIZE)
-                if i % DISPLAY_STEP == 0:
-                    acc = accuracy.eval(feed_dict={X: batch[0],
-                                                y: batch[1],
-                                                keep_prob: 1.0})
-                    print(f"Step {i}, training accuracy {acc:.4f}")
-                optimizer.run(feed_dict={
-                    X: batch[0],
-                    y: batch[1],
-                    keep_prob: 0.75})
-            saver.save(sess, SAVE_PATH)
-            print(f"Model save path to: {SAVE_PATH}")
+    for i in range(MAX_EPOCH + 1):
+        batch = mnist.train.next_batch(BATCH_SIZE)
+        if i % DISPLAY_STEP == 0:
+            acc = accuracy.eval(feed_dict={X: batch[0],
+                                           y: batch[1],
+                                           keep_prob: 1.0})
+            print(f"Step {i}, training accuracy {acc:.4f}")
+        optimizer.run(feed_dict={
+            X: batch[0],
+            y: batch[1],
+            keep_prob: 0.75})
+    saver.save(sess, SAVE_PATH)
+    print(f"Model save path to: {SAVE_PATH}")
 
 
-    def evaluate():
-        # Load the data
-        mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
-        with tf.Session() as sess:
-            # Initialize all variables
-            sess.run(init)
+def evaluate():
+    # Load the data
+    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
+    with tf.Session() as sess:
+        # Initialize all variables
+        sess.run(init)
 
-            saver.restore(sess, SAVE_PATH)
-            print(f"Model restore from : {SAVE_PATH}")
-            acc = accuracy.eval(feed_dict={X: mnist.test.images,
-                                        y: mnist.test.labels,
-                                        keep_prob: 1.0})
-            print(f"Acc: {acc:.4f}")
+        saver.restore(sess, SAVE_PATH)
+        print(f"Model restore from : {SAVE_PATH}")
+        acc = accuracy.eval(feed_dict={X: mnist.test.images,
+                                       y: mnist.test.labels,
+                                       keep_prob: 1.0})
+        print(f"Acc: {acc:.4f}")
 
 
 def read_data():
