@@ -17,7 +17,7 @@ BATCH_SIZE = 64  # How many pictures to train at one time.
 IMAGE_WEIGHT = 28
 IMAGE_HEIGHT = 28
 N_CLASSES = 10
-SAVE_PATH = '../../model/mnist/model.ckpt'
+SAVE_PATH = '../../model/tensorflow/mnist/model.ckpt'
 TRAIN_DIR = '/tmp/mnist/'
 
 
@@ -115,26 +115,26 @@ saver = tf.train.Saver()
 init = tf.global_variables_initializer()
 
 
-with tf.Session() as sess:
-    tf.device('gpu:0')
-    # Load the data
-    mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
-    # Initialize all variables
-    sess.run(init)
+def training():
+    with tf.Session() as sess:
+        # Load the data
+        mnist = input_data.read_data_sets(TRAIN_DIR, one_hot=True)
+        # Initialize all variables
+        sess.run(init)
 
-    for i in range(MAX_EPOCH + 1):
-        batch = mnist.train.next_batch(BATCH_SIZE)
-        if i % DISPLAY_STEP == 0:
-            acc = accuracy.eval(feed_dict={X: batch[0],
-                                           y: batch[1],
-                                           keep_prob: 1.0})
-            print(f"Step {i}, training accuracy {acc:.4f}")
-        optimizer.run(feed_dict={
-            X: batch[0],
-            y: batch[1],
-            keep_prob: 0.75})
-    saver.save(sess, SAVE_PATH)
-    print(f"Model save path to: {SAVE_PATH}")
+        for i in range(MAX_EPOCH + 1):
+            batch = mnist.train.next_batch(BATCH_SIZE)
+            if i % DISPLAY_STEP == 0:
+                acc = accuracy.eval(feed_dict={X: batch[0],
+                                               y: batch[1],
+                                               keep_prob: 1.0})
+                print(f"Step {i}, training accuracy {acc:.4f}")
+            optimizer.run(feed_dict={
+                X: batch[0],
+                y: batch[1],
+                keep_prob: 0.75})
+        saver.save(sess, SAVE_PATH)
+        print(f"Model save path to: {SAVE_PATH}")
 
 
 def evaluate():
@@ -167,12 +167,12 @@ def test():
         sess.run(init)
         # Using the model, the parameters are consistent with the previous code
         saver.restore(sess, SAVE_PATH)
-        # result = list(mnist.test.images)
+        result = list(mnist.test.images)
 
         prediction = tf.argmax(y_conv, 1)
         predint = prediction.eval(
             feed_dict={
-                X: mnist.test.images,
+                X: result,
                 keep_prob: 1.0},
             session=sess)
 
