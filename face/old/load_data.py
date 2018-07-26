@@ -1,11 +1,11 @@
 import os
+import sys
 
 import cv2
-
 import dlib
 
-output_dir = './unknown'
-size = 64
+output_dir = './data/' + sys.argv[1]
+width, height = 512, 512
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -19,7 +19,8 @@ camera = cv2.VideoCapture(0)
 index = 1
 while True:
     if index <= 100:
-        print('Being processed picture %s' % index)
+        os.system("clear")
+        print(f"{index}%")
         # 从摄像头读取照片
         success, img = camera.read()
         # 转为灰度图片
@@ -34,11 +35,8 @@ while True:
             y2 = d.right() if d.right() > 0 else 0
 
             face = img[x1:y1, x2:y2]
-            # 调整图片的对比度与亮度， 对比度与亮度值都取随机数，这样能增加样本的多样性
-
-            face = cv2.resize(face, (size, size))
-
-            cv2.imshow('image', face)
+            # 调整图片大小
+            face = cv2.resize(face, (width, height))
 
             cv2.imwrite(output_dir + '/' + str(index) + '.jpg', face)
 
