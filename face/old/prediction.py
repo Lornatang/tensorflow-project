@@ -1,13 +1,15 @@
-import tensorflow as tf
-import cv2
-import dlib
-import numpy as np
 import os
 import sys
+
+import cv2
+import numpy as np
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
-my_faces_path = './my_faces'
-other_faces_path = './other_faces'
+import dlib
+
+my_faces_path = './lcy'
+other_faces_path = './unknown'
 size = 64
 
 imgs = []
@@ -42,7 +44,8 @@ def readData(path, h=size, w=size):
 
             top, bottom, left, right = getPaddingSize(img)
             # 将图片放大， 扩充图片边缘部分
-            img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+            img = cv2.copyMakeBorder(
+                img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=[0, 0, 0])
             img = cv2.resize(img, (h, w))
 
             imgs.append(img)
@@ -57,7 +60,8 @@ imgs = np.array(imgs)
 
 labs = np.array([[0, 1] if lab == my_faces_path else [1, 0] for lab in labs])
 # 随机划分测试集与训练集
-train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.3, random_state=0)
+train_x, test_x, train_y, test_y = train_test_split(
+    imgs, labs, test_size=0.3, random_state=0)
 # 参数：图片数据的总数，图片的高、宽、通道
 train_x = train_x.reshape(train_x.shape[0], size, size, 3)
 test_x = test_x.reshape(test_x.shape[0], size, size, 3)
@@ -67,7 +71,7 @@ test_x = test_x.astype('float32') / 255.0
 
 print('train size:%s, test size:%s' % (len(train_x), len(test_x)))
 # 图片块，每次取128张图片
-batch_size = 16
+batch_size = 10
 num_batch = len(train_x) // batch_size
 
 x = tf.placeholder(tf.float32, [None, size, size, 3])
@@ -143,12 +147,13 @@ predict = tf.argmax(output, 1)
 
 saver = tf.train.Saver()
 sess = tf.Session()
-saver.restore(sess, './model/model.ckpt')
+saver.restore(sess, '../../../model/tensorflow/face_recognition/model.ckpt')
 
 
 def is_my_face(image):
-    res = sess.run(predict, feed_dict={x: [image / 255.0], keep_prob_5: 1.0, keep_prob_75: 1.0})
-    if res[0] == 1:
+    result = sess.run(predict, feed_dict={
+                   x: [image / 255.0], keep_prob_5: 1.0, keep_prob_75: 1.0})
+    if result[0] == 1:
         return "is lcy."
     else:
         return "I'not know."
@@ -176,8 +181,6 @@ while True:
 
         cv2.rectangle(img, (x2, x1), (y2, y1), (255, 0, 0), 3)
         cv2.imshow('image', img)
-        key = cv2.waitKey(30) & 0xff
-        if key == 27:
-            sys.exit(0)
 
-sess.close()
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
