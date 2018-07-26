@@ -34,10 +34,10 @@ def get_padding_size(x):
     """
 
     Args:
-        x:
+        x: input image
 
     Returns:
-
+        top, bottom, left, right
     """
     h, w, _ = x.shape
     top, bottom, left, right = (0, 0, 0, 0)
@@ -45,7 +45,7 @@ def get_padding_size(x):
 
     if w < longest:
         tmp = longest - w
-        # //表示整除符号
+
         left = tmp // 2
         right = tmp - left
     elif h < longest:
@@ -58,6 +58,13 @@ def get_padding_size(x):
 
 
 def read_data(path, h=width, w=height):
+    """read data to here
+
+    Args:
+        path: dir path
+        h: image height
+        w: image width
+    """
     for filename in os.listdir(path):
         if filename.endswith('.jpg'):
             filename = path + '/' + filename
