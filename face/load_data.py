@@ -7,16 +7,16 @@
 """
 import os
 import random
-
+import sys
 import cv2
 
 import dlib
 
 
-dir_path = input("Please input you want to save the address of the file.\n>>> ")
+dir_path = sys.argv[1]
+numbers = sys.argv[2]
 
 width, height = 64, 64  # Photo size 128 * 128.
-numbers = int(input("Please enter the number of generated images.\n>>> "))
 
 # We used dlib's own frontal_face_detector as our feature extractor
 detector = dlib.get_frontal_face_detector()
