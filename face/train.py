@@ -216,4 +216,5 @@ def train():
 
 
 if __name__ == '__main__':
+    os.system("find ./* -name '.DS_Store' -type f -delete")
     train()

@@ -35,7 +35,7 @@ def load_data():
     while True:
         if index <= 100:
             os.system("clear")
-            print(f"{'#' * (index // 10):10s} " + f"{index}%")
+            print(f"{'#' * (index // 5):20s} " + f"{index}%")
             print(f"Save to {img_path}/{index}.jpg")
             # 从摄像头读取照片
             _, img = camera.read()
@@ -66,4 +66,5 @@ def load_data():
 
 
 if __name__ == '__main__':
+    os.system("find ./* -name '.DS_Store' -type f -delete")
     load_data()

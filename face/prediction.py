@@ -210,4 +210,5 @@ def validation():
 
 
 if __name__ == '__main__':
-        validation()
+    os.system("find ./* -name '.DS_Store' -type f -delete")
+    validation()
