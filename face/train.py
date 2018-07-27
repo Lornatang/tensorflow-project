@@ -20,12 +20,14 @@ tf.logging.set_verbosity(tf.logging.DEBUG)
 img_path = './data/' + sys.argv[2]
 unknown_path = './data/'
 
-model_path = '../../model/tensorflow/face_recognition/' + sys.argv[2] + '.ckpt'
+model_path = '../../model/tensorflow/face_recognition/' + sys.argv[2] + '/model.ckpt'
 
-width, height = 128, 128
+width, height = 64, 64
 
-MAX_EPOCH = 100
-BATCH_SIZE = 50
+LEARNING_RATE = 1e-3
+MAX_EPOCH = 50
+BATCH_SIZE = 16
+DISPLAY_EPOCH = MAX_EPOCH // 10
 
 
 imgs = []
@@ -75,8 +77,10 @@ def read_data(path, w=width, h=height):
 read_data(img_path)
 # 加载陌生数据
 for dirname in os.listdir(unknown_path):
-    if dirname != 'lcy':
+    if dirname != sys.argv[1]:
         read_data("./data/" + dirname)
+    else:
+        pass
 
 
 # 将图片数据与标签转换成数组
@@ -84,7 +88,7 @@ imgs = np.array(imgs)
 labs = np.array([[0, 1] if lab == img_path else [1, 0] for lab in labs])
 
 # 随机划分测试集与训练集
-train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.1, random_state=0)
+train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.3, random_state=0)
 
 # 参数：图片数据的总数，图片的高、宽、通道
 train_x = train_x.reshape(train_x.shape[0], width, height, 3)
@@ -128,7 +132,7 @@ def conv_net():
     # 池化
     pool1 = max_pool(conv1)
     # 减少过拟合，随机让某些权重不更新
-    drop1 = tf.nn.dropout(pool1, keep_prob=0.5)
+    drop1 = tf.nn.dropout(pool1, keep_prob=keep_prob)
 
     # 第二层
     w2 = weight([3, 3, 32, 64])
@@ -138,27 +142,27 @@ def conv_net():
     # 池化
     pool2 = max_pool(conv2)
     # 减少过拟合，随机让某些权重不更新
-    drop2 = tf.nn.dropout(pool2, keep_prob=0.5)
+    drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
 
     # 第三层
-    w3 = weight([3, 3, 64, 128])
-    b3 = bias([128])
+    w3 = weight([3, 3, 64, 64])
+    b3 = bias([64])
     # 卷积
     conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
     # 池化
     pool3 = max_pool(conv3)
     # 减少过拟合，随机让某些权重不更新
-    drop3 = tf.nn.dropout(pool3, keep_prob=0.5)
+    drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
 
     # 全连接层
-    wc = weight([16 * 32 * 64, 1024])
-    bc = bias([1024])
-    drop4_flat = tf.reshape(drop3, [-1, 16 * 32 * 64])
+    wc = weight([8 * 8 * 64, 512])
+    bc = bias([512])
+    drop4_flat = tf.reshape(drop3, [-1, 8 * 8 * 64])
     dense = tf.nn.relu(tf.matmul(drop4_flat, wc) + bc)
-    drop4_flatten = tf.nn.dropout(dense, keep_prob=0.75)
+    drop4_flatten = tf.nn.dropout(dense, keep_prob=keep_prob)
 
     # 输出层
-    wout = weight([1024, 2])
+    wout = weight([512, 2])
     bout = bias([2])
 
     out = tf.add(tf.matmul(drop4_flatten, wout), bout)
@@ -166,9 +170,11 @@ def conv_net():
     return out
 
 
+# 使用dlib自带的frontal_face_detector作为我们的特征提取器
+detector = dlib.get_frontal_face_detector()
+
+
 def load_data():
-    # 使用dlib自带的frontal_face_detector作为我们的特征提取器
-    detector = dlib.get_frontal_face_detector()
     # 打开摄像头 参数为输入流，可以为摄像头或视频文件
     camera = cv2.VideoCapture(0)
 
@@ -205,15 +211,18 @@ def load_data():
             break
 
 
+pred = conv_net()
+predict = tf.argmax(pred, 1)
+
+
 def train():
     print(f"Train size:{len(train_x)}, test size:{len(test_x)}")
-    train_pred = conv_net()
 
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=train_pred, labels=y))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=pred, labels=y))
 
-    train_step = tf.train.AdamOptimizer(0.01).minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(cross_entropy)
     # 比较标签是否相等，再求的所有数的平均值，tf.cast(强制转换类型)
-    correct_prediction = tf.equal(tf.argmax(train_pred, 1), tf.argmax(y, 1))
+    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     # 数据保存器的初始化
@@ -231,43 +240,31 @@ def train():
                 # 开始训练数据，同时训练三个变量，返回三个数据
                 _, loss, = train_sess.run([train_step, cross_entropy],
                                           feed_dict={X: batch_x, y: batch_y, keep_prob: 0.75})
-            if epoch % 1 == 0:
+            if epoch % DISPLAY_EPOCH == 0:
                 # 获取测试数据的准确率
-                train_acc = accuracy.eval({X: train_x, y: train_y, keep_prob: 1.})
-                print(f"Epoch {epoch} train acc: {train_acc:.3f} loss: {loss:.8f}")
+                train_acc = accuracy.eval({X: train_x, y: train_y, keep_prob: 1.0})
+                print(f"Epoch {epoch} train acc: {train_acc:.5f} loss: {loss:.10f}")
 
-                test_acc = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.})
-                if test_acc == 1.0:
-                    print(f"Acc == 1.0 exit epoch!")
-                    break
-
+        test_acc = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.0})
         saver.save(train_sess, model_path)
-        print(f"Validation acc : {test_acc}.")
+        print(f"Validation acc : {test_acc}")
         print("Optimization complete!")
         print(f"Model save to {model_path}")
         sys.exit(0)
 
 
-val_sess = tf.Session()
-val_pred = conv_net()
-predict = tf.argmax(val_pred, 1)
-val_sess.run(tf.global_variables_initializer())
-
-
 def prediction(image):
-    result = val_sess.run(predict, feed_dict={
-        X: [image / 255.0], keep_prob: 1.0})
-    if result[0] == 1:
-        return True
-    else:
-        return False
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        result = sess.run(predict, feed_dict={
+            X: [image / 255.0], keep_prob: 1.0})
+        if result[0] == 1:
+            return True
+        else:
+            return False
 
 
 def validation():
-
-    # 使用dlib自带的frontal_face_detector作为我们的特征提取器
-    detector = dlib.get_frontal_face_detector()
-
     camera = cv2.VideoCapture(0)
 
     while True:
