@@ -22,12 +22,12 @@ unknown_path = './data/'
 
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[2] + '/model.ckpt'
 
-width, height = 64, 64
+width, height = 400, 400
 
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 1e-4
 MAX_EPOCH = 50
-BATCH_SIZE = 16
-DISPLAY_EPOCH = MAX_EPOCH // 10
+BATCH_SIZE = 4
+DISPLAY_EPOCH = MAX_EPOCH // 5
 
 
 imgs = []
@@ -145,8 +145,8 @@ def conv_net():
     drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
 
     # 第三层
-    w3 = weight([3, 3, 64, 64])
-    b3 = bias([64])
+    w3 = weight([3, 3, 64, 128])
+    b3 = bias([128])
     # 卷积
     conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
     # 池化
@@ -155,9 +155,9 @@ def conv_net():
     drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
 
     # 全连接层
-    wc = weight([8 * 8 * 64, 512])
+    wc = weight([50 * 50 * 128, 512])
     bc = bias([512])
-    drop4_flat = tf.reshape(drop3, [-1, 8 * 8 * 64])
+    drop4_flat = tf.reshape(drop3, [-1, 50 * 50 * 128])
     dense = tf.nn.relu(tf.matmul(drop4_flat, wc) + bc)
     drop4_flatten = tf.nn.dropout(dense, keep_prob=keep_prob)
 
@@ -172,6 +172,7 @@ def conv_net():
 
 # 使用dlib自带的frontal_face_detector作为我们的特征提取器
 detector = dlib.get_frontal_face_detector()
+a = dlib.face_recognition_model_v1
 
 
 def load_data():
@@ -180,9 +181,9 @@ def load_data():
 
     index = 1
     while True:
-        if index <= 100:
+        if index <= 10:
             os.system("clear")
-            print(f"{'#' * (index // 2):50s} " + f"{index}%")
+            print(f"{'#' * index:10s} " + f"{index}%")
             print(f"Save to {img_path}/{index}.jpg")
             # 从摄像头读取照片
             _, img = camera.read()
@@ -200,11 +201,12 @@ def load_data():
                 face = img[x1:y1, x2:y2]
                 # 调整图片大小
                 face = cv2.resize(face, (width, height))
+                cv2.imshow('Camera', face)
 
                 cv2.imwrite(f"{img_path}/{str(sys.argv[2]) + str(index)}.jpg", face)
 
                 index += 1
-            if cv2.waitKey(100) & 0xFF == ord('q'):
+            if cv2.waitKey(1000) & 0xFF == ord('q'):
                 break
         else:
             print('Finished!')
@@ -287,9 +289,9 @@ def validation():
                 print(f"I don't know you.'")
 
             cv2.rectangle(img, (x2, x1), (y2, y1), (255, 0, 0), 3)
-            cv2.imshow('image', img)
+            cv2.imshow('Camera', img)
 
-        if cv2.waitKey(500) & 0xFF == ord('q'):
+        if cv2.waitKey(1000) & 0xFF == ord('q'):
             sys.exit(0)
 
 
