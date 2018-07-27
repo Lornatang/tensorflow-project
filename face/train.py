@@ -6,30 +6,36 @@
 # license: MIT
 """
 import os
+import sys
 
 import cv2
+import dlib
 import numpy as np
-import sys
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
 # 第一个参数代表图片目录，第二个参数代表模型保存位置
-img_path = './data/' + sys.argv[1]
+img_path = './data/' + sys.argv[2]
 unknown_path = './data/'
+
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[2] + '.ckpt'
 
 width, height = 128, 128
 
-MAX_EPOCH = int(sys.argv[3])
-BATCH_SIZE = 64
+MAX_EPOCH = 100
+BATCH_SIZE = 50
 
 
 imgs = []
 labs = []
 
+if not os.path.exists(img_path):
+    os.makedirs(img_path)
 
+
+# 填充图片大小
 def get_padding_size(img):
     h, w, _ = img.shape
     top, bottom, left, right = (0, 0, 0, 0)
@@ -71,7 +77,6 @@ read_data(img_path)
 for dirname in os.listdir(unknown_path):
     if dirname != 'lcy':
         read_data("./data/" + dirname)
-        print('./data/' + dirname)
 
 
 # 将图片数据与标签转换成数组
@@ -161,43 +166,147 @@ def conv_net():
     return out
 
 
+def load_data():
+    # 使用dlib自带的frontal_face_detector作为我们的特征提取器
+    detector = dlib.get_frontal_face_detector()
+    # 打开摄像头 参数为输入流，可以为摄像头或视频文件
+    camera = cv2.VideoCapture(0)
+
+    index = 1
+    while True:
+        if index <= 100:
+            os.system("clear")
+            print(f"{'#' * (index // 2):50s} " + f"{index}%")
+            print(f"Save to {img_path}/{index}.jpg")
+            # 从摄像头读取照片
+            _, img = camera.read()
+            # 转为灰度图片
+            gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            # 使用detector进行人脸检测
+            dets = detector(gray_img, 1)
+
+            for i, d in enumerate(dets):
+                x1 = d.top() if d.top() > 0 else 0
+                y1 = d.bottom() if d.bottom() > 0 else 0
+                x2 = d.left() if d.left() > 0 else 0
+                y2 = d.right() if d.right() > 0 else 0
+
+                face = img[x1:y1, x2:y2]
+                # 调整图片大小
+                face = cv2.resize(face, (width, height))
+
+                cv2.imwrite(f"{img_path}/{str(sys.argv[2]) + str(index)}.jpg", face)
+
+                index += 1
+            if cv2.waitKey(100) & 0xFF == ord('q'):
+                break
+        else:
+            print('Finished!')
+            break
+
+
 def train():
     print(f"Train size:{len(train_x)}, test size:{len(test_x)}")
-    pred = conv_net()
+    train_pred = conv_net()
 
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=pred, labels=y))
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=train_pred, labels=y))
 
     train_step = tf.train.AdamOptimizer(0.01).minimize(cross_entropy)
     # 比较标签是否相等，再求的所有数的平均值，tf.cast(强制转换类型)
-    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+    correct_prediction = tf.equal(tf.argmax(train_pred, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     # 数据保存器的初始化
     saver = tf.train.Saver()
 
-    with tf.Session() as sess:
+    with tf.Session() as train_sess:
 
-        sess.run(tf.global_variables_initializer())
+        train_sess.run(tf.global_variables_initializer())
 
-        for epoch in range(1, MAX_EPOCH+1):
+        for epoch in range(1, MAX_EPOCH + 1):
             # 每次取128(batch_size)张图片
             for i in range(num_batch):
                 batch_x = train_x[i * BATCH_SIZE: (i + 1) * BATCH_SIZE]
                 batch_y = train_y[i * BATCH_SIZE: (i + 1) * BATCH_SIZE]
                 # 开始训练数据，同时训练三个变量，返回三个数据
-                _, loss, = sess.run([train_step, cross_entropy],
-                                    feed_dict={X: batch_x, y: batch_y, keep_prob: 0.75})
+                _, loss, = train_sess.run([train_step, cross_entropy],
+                                          feed_dict={X: batch_x, y: batch_y, keep_prob: 0.75})
             if epoch % 1 == 0:
                 # 获取测试数据的准确率
-                acc = accuracy.eval({X: train_x, y: train_y, keep_prob: 1.})
-                print(f"Epoch {epoch} train acc: {acc:.3f} loss: {loss:.8f}")
+                train_acc = accuracy.eval({X: train_x, y: train_y, keep_prob: 1.})
+                print(f"Epoch {epoch} train acc: {train_acc:.3f} loss: {loss:.8f}")
 
-        Accuracy = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.})
-        saver.save(sess, model_path)
-        print(f"Validation acc : {Accuracy}.")
+                test_acc = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.})
+                if test_acc == 1.0:
+                    print(f"Acc == 1.0 exit epoch!")
+                    break
+
+        saver.save(train_sess, model_path)
+        print(f"Validation acc : {test_acc}.")
         print("Optimization complete!")
         print(f"Model save to {model_path}")
         sys.exit(0)
 
 
-train()
+val_sess = tf.Session()
+val_pred = conv_net()
+predict = tf.argmax(val_pred, 1)
+val_sess.run(tf.global_variables_initializer())
+
+
+def prediction(image):
+    result = val_sess.run(predict, feed_dict={
+        X: [image / 255.0], keep_prob: 1.0})
+    if result[0] == 1:
+        return True
+    else:
+        return False
+
+
+def validation():
+
+    # 使用dlib自带的frontal_face_detector作为我们的特征提取器
+    detector = dlib.get_frontal_face_detector()
+
+    camera = cv2.VideoCapture(0)
+
+    while True:
+        _, img = camera.read()
+        gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        dets = detector(gray_image, 1)
+
+        for i, d in enumerate(dets):
+            x1 = d.top() if d.top() > 0 else 0
+            y1 = d.bottom() if d.bottom() > 0 else 0
+            x2 = d.left() if d.left() > 0 else 0
+            y2 = d.right() if d.right() > 0 else 0
+
+            face = img[x1:y1, x2:y2]
+            # 调整图片的尺寸
+            face = cv2.resize(face, (width, height))
+            if prediction(face):
+                print(f"Hello {sys.argv[2]}")
+            else:
+                print(f"I don't know you.'")
+
+            cv2.rectangle(img, (x2, x1), (y2, y1), (255, 0, 0), 3)
+            cv2.imshow('image', img)
+
+        if cv2.waitKey(500) & 0xFF == ord('q'):
+            sys.exit(0)
+
+
+if __name__ == '__main__':
+    while True:
+        if sys.argv[1] == '--train':
+            train()
+            break
+        elif sys.argv[1] == '--val':
+            validation()
+            break
+        elif sys.argv[1] == '--load':
+            load_data()
+            break
+        else:
+            print("\n\nEnter again.")
+            break
