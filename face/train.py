@@ -1,8 +1,15 @@
+"""
+# author: shiyipaisizuo
+# contact: shiyipaisizuo@gmail.com
+# file: train.py
+# time: 2018/7/27 10:20
+# license: MIT
+"""
 import os
-import sys
 
 import cv2
 import numpy as np
+import sys
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
