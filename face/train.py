@@ -1,8 +1,8 @@
 """
 # author: shiyipaisizuo
 # contact: shiyipaisizuo@gmail.com
-# file: train.py
-# time: 2018/7/27 10:20
+# file: trains.py
+# time: 2018/7/27 17:12
 # license: MIT
 """
 import os
@@ -17,16 +17,16 @@ from sklearn.model_selection import train_test_split
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
 # 第一个参数代表图片目录，第二个参数代表模型保存位置
-img_path = './data/' + sys.argv[2]
+img_path = './data/' + sys.argv[1]
 unknown_path = './data/'
 
-model_path = '../../model/tensorflow/face_recognition/' + sys.argv[2] + '/model.ckpt'
+model_path = '../../model/tensorflow/face_recognition/' + sys.argv[1] + '/model.ckpt'
 
-width, height = 400, 400
+width, height = 128, 128
 
-LEARNING_RATE = 1e-4
-MAX_EPOCH = 50
-BATCH_SIZE = 4
+LEARNING_RATE = 1e-3
+MAX_EPOCH = int(sys.argv[2])
+BATCH_SIZE = 64
 DISPLAY_EPOCH = MAX_EPOCH // 5
 
 
@@ -172,46 +172,6 @@ def conv_net():
 
 # 使用dlib自带的frontal_face_detector作为我们的特征提取器
 detector = dlib.get_frontal_face_detector()
-a = dlib.face_recognition_model_v1
-
-
-def load_data():
-    # 打开摄像头 参数为输入流，可以为摄像头或视频文件
-    camera = cv2.VideoCapture(0)
-
-    index = 1
-    while True:
-        if index <= 10:
-            os.system("clear")
-            print(f"{'#' * index:10s} " + f"{index}%")
-            print(f"Save to {img_path}/{index}.jpg")
-            # 从摄像头读取照片
-            _, img = camera.read()
-            # 转为灰度图片
-            gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            # 使用detector进行人脸检测
-            dets = detector(gray_img, 1)
-
-            for i, d in enumerate(dets):
-                x1 = d.top() if d.top() > 0 else 0
-                y1 = d.bottom() if d.bottom() > 0 else 0
-                x2 = d.left() if d.left() > 0 else 0
-                y2 = d.right() if d.right() > 0 else 0
-
-                face = img[x1:y1, x2:y2]
-                # 调整图片大小
-                face = cv2.resize(face, (width, height))
-                cv2.imshow('Camera', face)
-
-                cv2.imwrite(f"{img_path}/{str(sys.argv[2]) + str(index)}.jpg", face)
-
-                index += 1
-            if cv2.waitKey(1000) & 0xFF == ord('q'):
-                break
-        else:
-            print('Finished!')
-            break
-
 
 pred = conv_net()
 predict = tf.argmax(pred, 1)
@@ -255,57 +215,5 @@ def train():
         sys.exit(0)
 
 
-def prediction(image):
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        result = sess.run(predict, feed_dict={
-            X: [image / 255.0], keep_prob: 1.0})
-        if result[0] == 1:
-            return True
-        else:
-            return False
-
-
-def validation():
-    camera = cv2.VideoCapture(0)
-
-    while True:
-        _, img = camera.read()
-        gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        dets = detector(gray_image, 1)
-
-        for i, d in enumerate(dets):
-            x1 = d.top() if d.top() > 0 else 0
-            y1 = d.bottom() if d.bottom() > 0 else 0
-            x2 = d.left() if d.left() > 0 else 0
-            y2 = d.right() if d.right() > 0 else 0
-
-            face = img[x1:y1, x2:y2]
-            # 调整图片的尺寸
-            face = cv2.resize(face, (width, height))
-            if prediction(face):
-                print(f"Hello {sys.argv[2]}")
-            else:
-                print(f"I don't know you.'")
-
-            cv2.rectangle(img, (x2, x1), (y2, y1), (255, 0, 0), 3)
-            cv2.imshow('Camera', img)
-
-        if cv2.waitKey(1000) & 0xFF == ord('q'):
-            sys.exit(0)
-
-
 if __name__ == '__main__':
-    while True:
-        if sys.argv[1] == '--train':
-            train()
-            break
-        elif sys.argv[1] == '--val':
-            validation()
-            break
-        elif sys.argv[1] == '--load':
-            load_data()
-            break
-        else:
-            print("\n\nEnter again.")
-            break
+    train()
