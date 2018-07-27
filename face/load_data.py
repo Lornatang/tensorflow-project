@@ -14,13 +14,15 @@ import tensorflow as tf
 
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
+os.system("find ./* -name '.DS_Store' -type f -delete")
+
 # 第一个参数代表图片目录，第二个参数代表模型保存位置
 img_path = './data/' + sys.argv[1]
 unknown_path = './data/'
 
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[1] + '/model.ckpt'
 
-width, height = 128, 128
+width, height = 64, 64
 
 if not os.path.exists(img_path):
     os.makedirs(img_path)
@@ -29,13 +31,15 @@ if not os.path.exists(img_path):
 detector = dlib.get_frontal_face_detector()
 camera = cv2.VideoCapture(0)  # 打开相机
 
+MAX_INDEX = int(sys.argv[3]) - int(sys.argv[2])
+
 
 def load_data():
-    index = 1
+    index = int(sys.argv[2])
     while True:
-        if index <= 100:
+        if index <= int(sys.argv[3]):
             os.system("clear")
-            print(f"{'#' * (index // 5):20s} " + f"{index}%")
+            print(f"{'#' * (index - int(sys.argv[2])):100s} ")
             print(f"Save to {img_path}/{index}.jpg")
             # 从摄像头读取照片
             _, img = camera.read()
@@ -55,7 +59,7 @@ def load_data():
                 face = cv2.resize(face, (width, height))
                 cv2.imshow('Camera', face)
 
-                cv2.imwrite(f"{img_path}/{str(sys.argv[1]) + str(index)}.jpg", face)
+                cv2.imwrite(f"{img_path}/{str(index)}.jpg", face)
 
                 index += 1
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -66,5 +70,4 @@ def load_data():
 
 
 if __name__ == '__main__':
-    os.system("find ./* -name '.DS_Store' -type f -delete")
     load_data()

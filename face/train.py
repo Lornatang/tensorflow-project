@@ -16,18 +16,21 @@ from sklearn.model_selection import train_test_split
 
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
+os.system("find ./* -name '.DS_Store' -type f -delete")
+
 # 第一个参数代表图片目录，第二个参数代表模型保存位置
 img_path = './data/' + sys.argv[1]
 unknown_path = './data/'
 
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[1] + '/model.ckpt'
 
-width, height = 128, 128
+width, height = 64, 64
 
-LEARNING_RATE = 1e-3
-MAX_EPOCH = int(sys.argv[2])
+LEARNING_RATE = 0.01
 BATCH_SIZE = 64
-DISPLAY_EPOCH = MAX_EPOCH // 5
+
+MAX_EPOCH = int(sys.argv[2])
+DISPLAY_EPOCH = 1
 
 
 imgs = []
@@ -145,8 +148,8 @@ def conv_net():
     drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
 
     # 第三层
-    w3 = weight([3, 3, 64, 128])
-    b3 = bias([128])
+    w3 = weight([3, 3, 64, 64])
+    b3 = bias([64])
     # 卷积
     conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
     # 池化
@@ -155,11 +158,11 @@ def conv_net():
     drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
 
     # 全连接层
-    wc = weight([50 * 50 * 128, 512])
+    wc = weight([4 * 4 * 64, 512])
     bc = bias([512])
-    drop4_flat = tf.reshape(drop3, [-1, 50 * 50 * 128])
+    drop4_flat = tf.reshape(drop3, [-1, 4 * 4 * 64])
     dense = tf.nn.relu(tf.matmul(drop4_flat, wc) + bc)
-    drop4_flatten = tf.nn.dropout(dense, keep_prob=keep_prob)
+    drop4_flatten = tf.nn.dropout(dense, keep_prob=0.75)
 
     # 输出层
     wout = weight([512, 2])
@@ -178,6 +181,7 @@ predict = tf.argmax(pred, 1)
 
 
 def train():
+    os.system("clear")
     print(f"Train size:{len(train_x)}, test size:{len(test_x)}")
 
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=pred, labels=y))
@@ -190,9 +194,9 @@ def train():
     # 数据保存器的初始化
     saver = tf.train.Saver()
 
-    with tf.Session() as train_sess:
+    with tf.Session() as sess:
 
-        train_sess.run(tf.global_variables_initializer())
+        sess.run(tf.global_variables_initializer())
 
         for epoch in range(1, MAX_EPOCH + 1):
             # 每次取128(batch_size)张图片
@@ -200,21 +204,22 @@ def train():
                 batch_x = train_x[i * BATCH_SIZE: (i + 1) * BATCH_SIZE]
                 batch_y = train_y[i * BATCH_SIZE: (i + 1) * BATCH_SIZE]
                 # 开始训练数据，同时训练三个变量，返回三个数据
-                _, loss, = train_sess.run([train_step, cross_entropy],
-                                          feed_dict={X: batch_x, y: batch_y, keep_prob: 0.75})
-            if epoch % DISPLAY_EPOCH == 0:
+                _, loss, = sess.run([train_step, cross_entropy],
+                                    feed_dict={X: batch_x, y: batch_y, keep_prob: 0.75})
+            if epoch % DISPLAY_EPOCH == 0 or epoch == 1:
                 # 获取测试数据的准确率
-                train_acc = accuracy.eval({X: train_x, y: train_y, keep_prob: 1.0})
-                print(f"Epoch {epoch} train acc: {train_acc:.5f} loss: {loss:.10f}")
+                acc = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.0})
+                print(f"Epoch {epoch} acc: {acc:.5f} loss: {loss:.10f}")
+                # if acc == 1.0:
+                #     break
 
-        test_acc = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.0})
-        saver.save(train_sess, model_path)
-        print(f"Validation acc : {test_acc}")
+        val = accuracy.eval({X: test_x, y: test_y, keep_prob: 1.0})
+        saver.save(sess, model_path)
+        print(f"Validation acc : {val}")
         print("Optimization complete!")
         print(f"Model save to {model_path}")
         sys.exit(0)
 
 
 if __name__ == '__main__':
-    os.system("find ./* -name '.DS_Store' -type f -delete")
     train()

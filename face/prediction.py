@@ -16,13 +16,15 @@ from sklearn.model_selection import train_test_split
 
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
+os.system("find ./* -name '.DS_Store' -type f -delete")
+
 # 第一个参数代表图片目录，第二个参数代表模型保存位置
 img_path = './data/' + sys.argv[1]
 unknown_path = './data/'
 
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[1] + '/model.ckpt'
 
-width, height = 128, 128
+width, height = 32, 32
 
 imgs = []
 labs = []
@@ -87,7 +89,7 @@ imgs = np.array(imgs)
 labs = np.array([[0, 1] if lab == img_path else [1, 0] for lab in labs])
 
 # 随机划分测试集与训练集
-train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.3, random_state=0)
+train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.3, random_state=1)
 
 # 参数：图片数据的总数，图片的高、宽、通道
 train_x = train_x.reshape(train_x.shape[0], width, height, 3)
@@ -136,8 +138,8 @@ def conv_net():
     drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
 
     # 第三层
-    w3 = weight([3, 3, 64, 128])
-    b3 = bias([128])
+    w3 = weight([3, 3, 64, 64])
+    b3 = bias([64])
     # 卷积
     conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
     # 池化
@@ -146,14 +148,13 @@ def conv_net():
     drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
 
     # 全连接层
-    wc = weight([50 * 50 * 128, 512])
-    bc = bias([512])
-    drop4_flat = tf.reshape(drop3, [-1, 50 * 50 * 128])
+    wc = weight([4 * 4 * 64, 1024])
+    bc = bias([1024])
+    drop4_flat = tf.reshape(drop3, [-1, 4 * 4 * 64])
     dense = tf.nn.relu(tf.matmul(drop4_flat, wc) + bc)
-    drop4_flatten = tf.nn.dropout(dense, keep_prob=keep_prob)
+    drop4_flatten = tf.nn.dropout(dense, keep_prob=0.75)
 
-    # 输出层
-    wout = weight([512, 2])
+    wout = weight([1024, 2])
     bout = bias([2])
 
     out = tf.add(tf.matmul(drop4_flatten, wout), bout)
@@ -194,11 +195,11 @@ def validation():
             x2 = d.left() if d.left() > 0 else 0
             y2 = d.right() if d.right() > 0 else 0
 
-            face = img[x1:y1, x2:y2]
+            img = img[x1:y1, x2:y2]
             # 调整图片的尺寸
-            face = cv2.resize(face, (width, height))
+            face = cv2.resize(img, (width, height))
             if prediction(face):
-                print(f"Hello {sys.argv[1]}")
+                print(f"Hello {sys.argv[1]}!")
             else:
                 print(f"I don't know you.'")
 
@@ -210,5 +211,4 @@ def validation():
 
 
 if __name__ == '__main__':
-    os.system("find ./* -name '.DS_Store' -type f -delete")
     validation()
