@@ -6,11 +6,11 @@
 # license: MIT
 """
 import os
-import sys
 
 import cv2
 import dlib
 import numpy as np
+import sys
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
@@ -24,10 +24,10 @@ unknown_path = './data/'
 
 model_path = '../../model/tensorflow/face_recognition/' + sys.argv[1] + '/model.ckpt'
 
-width, height = 64, 64
+width, height = 250, 250
 
-LEARNING_RATE = 0.01
-BATCH_SIZE = 64
+LEARNING_RATE = 0.001
+BATCH_SIZE = 1
 
 MAX_EPOCH = int(sys.argv[2])
 DISPLAY_EPOCH = 1
@@ -88,8 +88,8 @@ for dirname in os.listdir(unknown_path):
 
 # 将图片数据与标签转换成数组
 imgs = np.array(imgs)
-labs = np.array([[0, 1] if lab == img_path else [1, 0] for lab in labs])
-
+labs = np.array([1,2,3,4,5,6,7,8])
+print(labs)
 # 随机划分测试集与训练集
 train_x, test_x, train_y, test_y = train_test_split(imgs, labs, test_size=0.3, random_state=0)
 
@@ -105,7 +105,7 @@ test_x = test_x.astype('float32') / 255.0
 num_batch = len(train_x) // BATCH_SIZE
 
 X = tf.placeholder(tf.float32, [None, width, height, 3])
-y = tf.placeholder(tf.float32, [None, 2])
+y = tf.placeholder(tf.float32, [None, 8])
 
 keep_prob = tf.placeholder(tf.float32)
 
@@ -128,8 +128,8 @@ def max_pool(x):
 
 def conv_net():
     # 第一层
-    w1 = weight([3, 3, 3, 32])  # 卷积核大小(3,3)， 输入通道(3)， 输出通道(32)
-    b1 = bias([32])
+    w1 = weight([3, 3, 3, 64])  # 卷积核大小(3,3)， 输入通道(3)， 输出通道(32)
+    b1 = bias([64])
     # 卷积
     conv1 = tf.nn.relu(conv2d(X, w1) + b1)
     # 池化
@@ -137,36 +137,36 @@ def conv_net():
     # 减少过拟合，随机让某些权重不更新
     drop1 = tf.nn.dropout(pool1, keep_prob=keep_prob)
 
-    # 第二层
-    w2 = weight([3, 3, 32, 64])
-    b2 = bias([64])
-    # 卷积
-    conv2 = tf.nn.relu(conv2d(drop1, w2) + b2)
-    # 池化
-    pool2 = max_pool(conv2)
-    # 减少过拟合，随机让某些权重不更新
-    drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
-
-    # 第三层
-    w3 = weight([3, 3, 64, 64])
-    b3 = bias([64])
-    # 卷积
-    conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
-    # 池化
-    pool3 = max_pool(conv3)
-    # 减少过拟合，随机让某些权重不更新
-    drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
+    # # 第二层
+    # w2 = weight([3, 3, 32, 64])
+    # b2 = bias([64])
+    # # 卷积
+    # conv2 = tf.nn.relu(conv2d(drop1, w2) + b2)
+    # # 池化
+    # pool2 = max_pool(conv2)
+    # # 减少过拟合，随机让某些权重不更新
+    # drop2 = tf.nn.dropout(pool2, keep_prob=keep_prob)
+    #
+    # # 第三层
+    # w3 = weight([3, 3, 64, 64])
+    # b3 = bias([64])
+    # # 卷积
+    # conv3 = tf.nn.relu(conv2d(drop2, w3) + b3)
+    # # 池化
+    # pool3 = max_pool(conv3)
+    # # 减少过拟合，随机让某些权重不更新
+    # drop3 = tf.nn.dropout(pool3, keep_prob=keep_prob)
 
     # 全连接层
-    wc = weight([4 * 4 * 64, 512])
+    wc = weight([125 * 125 * 64, 512])
     bc = bias([512])
-    drop4_flat = tf.reshape(drop3, [-1, 4 * 4 * 64])
+    drop4_flat = tf.reshape(drop1, [-1, 12 * 125 * 64])
     dense = tf.nn.relu(tf.matmul(drop4_flat, wc) + bc)
     drop4_flatten = tf.nn.dropout(dense, keep_prob=0.75)
 
     # 输出层
-    wout = weight([512, 2])
-    bout = bias([2])
+    wout = weight([512, 8])
+    bout = bias([8])
 
     out = tf.add(tf.matmul(drop4_flatten, wout), bout)
 
