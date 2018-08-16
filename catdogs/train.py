@@ -11,7 +11,8 @@ import tensorflow as tf
 from tensorflow.contrib import slim
 import numpy as np
 
-from .utils import LoadDataset
+import utils
+
 
 
 def AlexNet(x_input):
@@ -50,17 +51,17 @@ def AlexNet(x_input):
 x_inputs = tf.placeholder(shape=[None, 128, 128, 3], dtype=tf.float32)
 y_labels = tf.placeholder(shape=[None, 2], dtype=tf.float32)
 
-train_datasets = LoadDataset("../data/catdog/train")
+train_datasets = utils.LoadDataset("../data/catdog/train")
 
-with tf.Session() as sess:
-    tf.run(tf.global_variables_initializer())
+with tf.Session(config=tf.ConfigProto(device_count={'gpu': 0})) as sess:
+    sess.run(tf.global_variables_initializer())
 
     # model
     predicts = AlexNet(x_inputs)
     # loss function
     loss = tf.losses.softmax_cross_entropy(y_labels, predicts)
     # train op
-    optimizer = tf.train.Adam(learning_rate=0.01, momentum=0.9).minimize(loss)
+    optimizer = tf.train.AdamOptimizer(learning_rate=0.0001).minimize(loss)
     # accuracy
     correct_prediction = tf.equal(tf.argmax(predicts, 1), tf.argmax(y_labels, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
