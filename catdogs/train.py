@@ -11,14 +11,14 @@ import argparse
 import tensorflow as tf
 import time
 
-from .utils import *
+import utils
 
 # Log
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--path', type=str, default='../data/catdog/train',
-                    help="""image path. Default='../data/catdog/train'.""")
+parser.add_argument('--path', type=str, default='../data/catdog/test',
+                    help="""image path. Default='../data/catdog/test'.""")
 parser.add_argument('--epochs', type=int, default=20,
                     help="""num epochs. Default=10""")
 parser.add_argument('--num_classes', type=int, default=2,
@@ -42,7 +42,7 @@ y = tf.placeholder(tf.float32, shape=[None, 2])
 keep_prob = tf.placeholder(tf.float32)  # drop(keep probability)
 
 # Load data
-train_datasets = LoadDataset(args.path)
+train_datasets = utils.LoadDataset(args.path)
 
 
 # Create model
@@ -64,7 +64,7 @@ biases = {
     'bc1': tf.Variable(tf.random_normal([32])),
     'bc2': tf.Variable(tf.random_normal([64])),
     'bd1': tf.Variable(tf.random_normal([1024])),
-    'out': tf.Variable(tf.random_normal([args.n_classes]))
+    'out': tf.Variable(tf.random_normal([args.num_classes]))
 }
 
 
@@ -90,20 +90,20 @@ def net(x, _weights, _biases, _dropout):
 # Construct model
 pred = net(X, weights, biases, keep_prob)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=pred))
-optimizer = tf.train.AdamOptimizer(args.learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(args.lr).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 # Save model
-saver = tf.Saver()
+saver = tf.train.Saver()
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for epoch in range(1, args.epochs):
+    for epoch in range(1, args.epochs+1):
         start = time.time()
-        batch_xs, batch_ys = train_datasets.reads(batch_size=64)
+        batch_xs, batch_ys = train_datasets.next_batch(64)
         sess.run(optimizer, feed_dict={X: batch_xs,
                                        y: batch_ys,
                                        keep_prob: args.dropout})
