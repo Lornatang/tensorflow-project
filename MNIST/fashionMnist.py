@@ -104,8 +104,8 @@ with tf.Session() as sess:
                                              y: batch_ys,
                                              keep_prob: 1.})
             print(f"Step [{step}/{args.epoch}], "
-                  f"Loss= {loss:.6f}, "
-                  f"Training Accuracy= {acc:.5f}")
+                  f"Loss: {loss:.6f}, "
+                  f"Acc: {acc:.5f}")
 
             saver.save(sess, args.model_path)
 

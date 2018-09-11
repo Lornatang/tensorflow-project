@@ -47,13 +47,13 @@ def max_pooling(image, k):
 weights = {
     'wc1': tf.Variable(tf.random_normal([3, 3, 1, 64])),
     'wc2': tf.Variable(tf.random_normal([3, 3, 64, 128])),
-    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 512])),
-    'out': tf.Variable(tf.random_normal([512, args.classes]))
+    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 1024])),
+    'out': tf.Variable(tf.random_normal([1024, args.classes]))
 }
 biases = {
     'bc1': tf.Variable(tf.random_normal([64])),
     'bc2': tf.Variable(tf.random_normal([128])),
-    'bd1': tf.Variable(tf.random_normal([512])),
+    'bd1': tf.Variable(tf.random_normal([1024])),
     'out': tf.Variable(tf.random_normal([args.classes]))
 }
 
@@ -92,7 +92,7 @@ def imageprepare():
     This function returns the pixel values.
     The imput is a png file location.
     """
-    file_name = '../data/MNIST/MNIST/test/3.jpg'  # 导入自己的图片地址
+    file_name = '../data/MNIST/MNIST/test/2.jpg'  # 导入自己的图片地址
     # in terminal 'mogrify -format png *.jpg' convert jpg to png
     im = Image.open(file_name).convert('L')
     tv = list(im.getdata())  # get pixel values
