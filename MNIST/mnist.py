@@ -46,13 +46,13 @@ def max_pooling(image, k):
 weights = {
     'wc1': tf.Variable(tf.random_normal([3, 3, 1, 64])),
     'wc2': tf.Variable(tf.random_normal([3, 3, 64, 128])),
-    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 512])),
-    'out': tf.Variable(tf.random_normal([512, args.classes]))
+    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 1024])),
+    'out': tf.Variable(tf.random_normal([1024, args.classes]))
 }
 biases = {
     'bc1': tf.Variable(tf.random_normal([64])),
     'bc2': tf.Variable(tf.random_normal([128])),
-    'bd1': tf.Variable(tf.random_normal([512])),
+    'bd1': tf.Variable(tf.random_normal([1024])),
     'out': tf.Variable(tf.random_normal([args.classes]))
 }
 
@@ -89,8 +89,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
-    saver.restore(sess, args.model_path)
-    # sess.run(tf.global_variables_initializer())
+    # saver.restore(sess, args.model_path)
+    sess.run(tf.global_variables_initializer())
     for step in range(1, args.epoch + 1):
         batch_xs, batch_ys = data.train.next_batch(args.batch_size)
         sess.run(optimizer, feed_dict={X: batch_xs,
