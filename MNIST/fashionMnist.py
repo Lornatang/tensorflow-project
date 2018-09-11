@@ -13,7 +13,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 # log
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
-data = input_data.read_data_sets("../data/fashionMNIST/", one_hot=True)  # Load data
+data = input_data.read_data_sets("../data/MNIST/fashionMNIST/", one_hot=True)  # Load data
 
 # Parameters
 parser = argparse.ArgumentParser("Tensorflow mnist")
@@ -25,10 +25,11 @@ parser.add_argument('--dis_epoch', default=2)
 parser.add_argument('--img_size', default=784)
 parser.add_argument('--classes', default=10)
 parser.add_argument('--dropout', default=0.75)
+args = parser.parse_args()
 
 # tf Graph input
-X = tf.placeholder(tf.float32, [None, n_input])
-y = tf.placeholder(tf.float32, [None, n_classes])
+X = tf.placeholder(tf.float32, [None, args.img_size])
+y = tf.placeholder(tf.float32, [None, args.classes])
 keep_prob = tf.placeholder(tf.float32)  # drop(keep probability)
 
 # Create model
@@ -46,13 +47,13 @@ weights = {
     'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     'wd1': tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
-    'out': tf.Variable(tf.random_normal([1024, n_classes]))
+    'out': tf.Variable(tf.random_normal([1024, args.classes]))
 }
 biases = {
     'bc1': tf.Variable(tf.random_normal([32])),
     'bc2': tf.Variable(tf.random_normal([64])),
     'bd1': tf.Variable(tf.random_normal([1024])),
-    'out': tf.Variable(tf.random_normal([n_classes]))
+    'out': tf.Variable(tf.random_normal([args.classes]))
 }
 
 
@@ -78,7 +79,7 @@ def conv_net(x, _weights, _biases, _dropout):
 # Construct model
 pred = conv_net(X, weights, biases, keep_prob)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=pred))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(learning_rate=args.learning_rate).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
@@ -86,12 +87,12 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for step in range(1, MAX_STEP):
-        batch_xs, batch_ys = mnist.train.next_batch(batch_size)
+    for step in range(1, args.epoch+1):
+        batch_xs, batch_ys = data.train.next_batch(args.batch_size)
         sess.run(optimizer, feed_dict={X: batch_xs,
                                        y: batch_ys,
-                                       keep_prob: dropout})
-        if step % display_step == 0:
+                                       keep_prob: args.dropout})
+        if step % args.dis_epoch == 0:
             acc = sess.run(accuracy, feed_dict={X: batch_xs,
                                                 y: batch_ys,
                                                 keep_prob: 1.})
@@ -102,6 +103,6 @@ with tf.Session() as sess:
 
         step += 1
     print("Optimization Finished!")
-    print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: mnist.test.images[:256],
-                                                              y: mnist.test.labels[:256],
+    print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
+                                                              y: data.test.labels[:256],
                                                               keep_prob: 1.}))
