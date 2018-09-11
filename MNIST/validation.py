@@ -1,11 +1,12 @@
 """
 # author: shiyipaisizuo
 # contact: shiyipaisizuo@gmail.com
-# file: mnist.py
-# time: 2018/9/10 15:00
+# file: validation.py
+# time: 2018/9/11 19:02
 # license: MIT
 """
 
+from PIL import Image
 import argparse
 
 import tensorflow as tf
@@ -85,31 +86,44 @@ optimizer = tf.train.AdamOptimizer(learning_rate=args.learning_rate).minimize(co
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
-# create model save checkpoint
+
+def imageprepare():
+    """
+    This function returns the pixel values.
+    The imput is a png file location.
+    """
+    file_name = '../data/MNIST/MNIST/test/3.jpg'  # 导入自己的图片地址
+    # in terminal 'mogrify -format png *.jpg' convert jpg to png
+    im = Image.open(file_name).convert('L')
+    tv = list(im.getdata())  # get pixel values
+
+    # normalize pixels to 0 and 1. 0 is pure white, 1 is pure black.
+    tva = [(255 - x) * 1.0 / 255.0 for x in tv]
+    # print(tva)
+    return tva
+
+    # Define the model (same as when creating the model file)
+
+
+result = imageprepare()
+
+init_op = tf.initialize_all_variables()
+
+"""
+Load the model2.ckpt file
+file is stored in the same directory as this python script is started
+Use the model to predict the integer. Integer is returend as list.
+
+Based on the documentatoin at
+https://www.tensorflow.org/versions/master/how_tos/variables/index.html
+"""
 saver = tf.train.Saver()
-
 with tf.Session() as sess:
-    saver.restore(sess, args.model_path)
-    # sess.run(tf.global_variables_initializer())
-    for step in range(1, args.epoch + 1):
-        batch_xs, batch_ys = data.train.next_batch(args.batch_size)
-        sess.run(optimizer, feed_dict={X: batch_xs,
-                                       y: batch_ys,
-                                       keep_prob: args.dropout})
-        if step % args.dis_epoch == 0 or step == 1:
-            acc = sess.run(accuracy, feed_dict={X: batch_xs,
-                                                y: batch_ys,
-                                                keep_prob: 1.})
-            loss = sess.run(cost, feed_dict={X: batch_xs,
-                                             y: batch_ys,
-                                             keep_prob: 1.})
-            print(f"Step [{step}/{args.epoch}], "
-                  f"Loss: {loss:.6f}, "
-                  f"Acc: {acc:.5f}")
+    saver.restore(sess, '../../models/tensorflow/MNIST/MNIST/MNIST.ckpt')  # 这里使用了之前保存的模型参数
+    # print ("Model restored.")
 
-            saver.save(sess, args.model_path)
+    prediction = tf.argmax(pred, 1)
+    predint = prediction.eval(feed_dict={X: [result], keep_prob: 1.0}, session=sess)
 
-    print("Optimization Finished!")
-    print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
-                                                              y: data.test.labels[:256],
-                                                              keep_prob: 1.}))
+    print('recognize result:')
+    print(predint[0])
