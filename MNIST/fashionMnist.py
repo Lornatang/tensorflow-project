@@ -17,7 +17,7 @@ data = input_data.read_data_sets("../data/MNIST/fashionMNIST/", one_hot=True)  #
 
 # Parameters
 parser = argparse.ArgumentParser("Tensorflow mnist")
-parser.add_argument('--learning_rate', default=0.0001)
+parser.add_argument('--learning_rate', default=0.001)
 parser.add_argument('--epoch', default=100)
 parser.add_argument('--batch_size', default=128)
 parser.add_argument('--dis_epoch', default=2)
@@ -32,9 +32,8 @@ X = tf.placeholder(tf.float32, [None, args.img_size])
 y = tf.placeholder(tf.float32, [None, args.classes])
 keep_prob = tf.placeholder(tf.float32)  # drop(keep probability)
 
+
 # Create model
-
-
 def conv2d(image, w, b):
     return tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(image, w, strides=[1, 1, 1, 1], padding='SAME'), b))
 
@@ -87,19 +86,21 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for step in range(1, args.epoch+1):
+    for step in range(1, args.epoch + 1):
         batch_xs, batch_ys = data.train.next_batch(args.batch_size)
         sess.run(optimizer, feed_dict={X: batch_xs,
                                        y: batch_ys,
                                        keep_prob: args.dropout})
-        if step % args.dis_epoch == 0:
+        if step % args.dis_epoch == 0 or step == 1:
             acc = sess.run(accuracy, feed_dict={X: batch_xs,
                                                 y: batch_ys,
                                                 keep_prob: 1.})
             loss = sess.run(cost, feed_dict={X: batch_xs,
                                              y: batch_ys,
                                              keep_prob: 1.})
-            print(f"Step {step} Minibatch Loss= {loss:.6f}, Training Accuracy= {acc:.5f}")
+            print(f"Step [{step}/{args.epoch}], "
+                  f"Loss= {loss:.6f}, "
+                  f"Training Accuracy= {acc:.5f}")
 
         step += 1
     print("Optimization Finished!")
