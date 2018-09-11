@@ -18,7 +18,7 @@ data = input_data.read_data_sets("../data/MNIST/MNIST/", one_hot=True)  # Load d
 # Parameters
 parser = argparse.ArgumentParser("Tensorflow mnist")
 parser.add_argument('--learning_rate', default=0.001)
-parser.add_argument('--epoch', default=100)
+parser.add_argument('--epoch', default=200)
 parser.add_argument('--batch_size', default=128)
 parser.add_argument('--dis_epoch', default=2)
 # Network Parameters
@@ -89,8 +89,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
-    # saver.restore(sess, args.model_path)
-    sess.run(tf.global_variables_initializer())
+    saver.restore(sess, args.model_path)
+    # sess.run(tf.global_variables_initializer())
     for step in range(1, args.epoch + 1):
         batch_xs, batch_ys = data.train.next_batch(args.batch_size)
         sess.run(optimizer, feed_dict={X: batch_xs,
