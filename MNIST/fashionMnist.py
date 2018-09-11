@@ -44,15 +44,15 @@ def max_pooling(image, k):
 
 
 weights = {
-    'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
-    'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
-    'wd1': tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
-    'out': tf.Variable(tf.random_normal([1024, args.classes]))
+    'wc1': tf.Variable(tf.random_normal([3, 3, 1, 64])),
+    'wc2': tf.Variable(tf.random_normal([3, 3, 64, 128])),
+    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 512])),
+    'out': tf.Variable(tf.random_normal([512, args.classes]))
 }
 biases = {
-    'bc1': tf.Variable(tf.random_normal([32])),
-    'bc2': tf.Variable(tf.random_normal([64])),
-    'bd1': tf.Variable(tf.random_normal([1024])),
+    'bc1': tf.Variable(tf.random_normal([64])),
+    'bc2': tf.Variable(tf.random_normal([128])),
+    'bd1': tf.Variable(tf.random_normal([512])),
     'out': tf.Variable(tf.random_normal([args.classes]))
 }
 
@@ -89,7 +89,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
+    saver.restore(sess, args.model_path)
+    # sess.run(tf.global_variables_initializer())
     for step in range(1, args.epoch + 1):
         batch_xs, batch_ys = data.train.next_batch(args.batch_size)
         sess.run(optimizer, feed_dict={X: batch_xs,
@@ -106,7 +107,7 @@ with tf.Session() as sess:
                   f"Loss= {loss:.6f}, "
                   f"Training Accuracy= {acc:.5f}")
 
-        saver.save(sess, args.model_path)
+            saver.save(sess, args.model_path)
 
     print("Optimization Finished!")
     print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
