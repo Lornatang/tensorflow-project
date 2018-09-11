@@ -25,6 +25,7 @@ parser.add_argument('--dis_epoch', default=2)
 parser.add_argument('--img_size', default=784)
 parser.add_argument('--classes', default=10)
 parser.add_argument('--dropout', default=0.75)
+parser.add_argument('--model_path', default='../../models/tensorflow/MNIST/FashionMNIST/FashionMNIST.ckpt')
 args = parser.parse_args()
 
 # tf Graph input
@@ -84,6 +85,9 @@ optimizer = tf.train.AdamOptimizer(learning_rate=args.learning_rate).minimize(co
 correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
+# create model save checkpoint
+saver = tf.train.Saver()
+
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     for step in range(1, args.epoch + 1):
@@ -102,7 +106,8 @@ with tf.Session() as sess:
                   f"Loss= {loss:.6f}, "
                   f"Training Accuracy= {acc:.5f}")
 
-        step += 1
+        saver.save(sess, args.model_path)
+
     print("Optimization Finished!")
     print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
                                                               y: data.test.labels[:256],
