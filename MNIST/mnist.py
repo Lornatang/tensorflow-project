@@ -4,8 +4,27 @@
 # file: mnist.py
 # time: 2018/9/10 15:00
 # license: MIT
+  Simple, end-to-end, LeNet-5-like convolutional MNIST model example.
+This should achieve a test error of 0.7%. Please keep this model as simple and
+linear as possible, it is meant as a tutorial for simple convolutional models.
+Run with --self_test on the command line to execute a short self-test.
 """
 
+#                 |===============================================|               #
+#                 |                    New file                   |
+#                 |===============================================|               #
+
+"""Details: https://github.com/tensorflow/models/tree/master/tutorials/image/mnist.
+This method can automatically download data and extract the function.
+Improved code readability.
+"""
+
+
+#                 |===============================================|               #
+#                 |                    Old file                   |
+#                 |===============================================|               #
+
+"""
 import argparse
 
 import tensorflow as tf
@@ -113,3 +132,4 @@ with tf.Session() as sess:
     print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
                                                               y: data.test.labels[:256],
                                                               keep_prob: 1.}))
+"""
