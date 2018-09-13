@@ -8,26 +8,24 @@
 This should achieve a test error of 0.7%. Please keep this model as simple and
 linear as possible, it is meant as a tutorial for simple convolutional models.
 Run with --self_test on the command line to execute a short self-test.
+  Details: https://github.com/tensorflow/models/tree/master/tutorials/image/mnist.
+This method can automatically download data and extract the function.
+Improved code readability.
 """
 
 #                 |===============================================|               #
 #                 |                    New file                   |
 #                 |===============================================|               #
 
-"""Details: https://github.com/tensorflow/models/tree/master/tutorials/image/mnist.
-This method can automatically download data and extract the function.
-Improved code readability.
-"""
-
 import argparse
 import gzip
 import os
-import sys
-import time
+import urllib.request
 
 import numpy
-import urllib.request
+import sys
 import tensorflow as tf
+import time
 
 SOURCE_URL = 'https://storage.googleapis.com/cvdf-datasets/mnist/'
 WORK_DIRECTORY = '../data/MNIST/MNIST/'
