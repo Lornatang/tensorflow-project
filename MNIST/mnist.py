@@ -234,6 +234,7 @@ def main(_):
         # Run all the initializers to prepare the trainable parameters.
         tf.global_variables_initializer().run()
         print('Initialized!')
+        saver = tf.train.Saver()
         # Loop through training steps.
         for step in range(int(num_epochs * train_size) // BATCH_SIZE):
             # Compute the offset of the current minibatch in the data.
@@ -262,6 +263,7 @@ def main(_):
                 print('Validation error: %.1f%%' % error_rate(
                     eval_in_batches(validation_data, sess), validation_labels))
                 sys.stdout.flush()
+            saver.save(sess, '../../models/tensorflow/MNIST/MNIST/mnist.ckpt')
         # Finally print the result!
         test_error = error_rate(eval_in_batches(test_data, sess), test_labels)
         print('Test error: %.1f%%' % test_error)

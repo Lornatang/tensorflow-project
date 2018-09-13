@@ -118,6 +118,12 @@ Based on the documentatoin at
 https://www.tensorflow.org/versions/master/how_tos/variables/index.html
 """
 saver = tf.train.Saver()
+
+
+def main(_):
+    tf.app.run(main=main, agrv=[sys.argv[0]])
+
+
 with tf.Session() as sess:
     saver.restore(sess, '../../models/tensorflow/MNIST/MNIST/MNIST.ckpt')  # 这里使用了之前保存的模型参数
     # print ("Model restored.")
