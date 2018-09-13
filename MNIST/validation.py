@@ -124,12 +124,22 @@ def main(_):
         test_labels_filename = download('t10k-labels-idx1-ubyte.gz')
 
         # Extract it into numpy arrays.
+        train_data = extract_data(train_data_filename, 60000)
         train_labels = extract_labels(train_labels_filename, 60000)
+        test_data = extract_data(test_data_filename, 10000)
+        test_labels = extract_labels(test_labels_filename, 10000)
 
         # Generate a validation set.
+        validation_data = train_data[:VALIDATION_SIZE, ...]
+        validation_labels = train_labels[:VALIDATION_SIZE]
+        train_data = train_data[VALIDATION_SIZE:, ...]
         train_labels = train_labels[VALIDATION_SIZE:]
+        num_epochs = NUM_EPOCHS
+    train_size = train_labels.shape[0]
 
     train_data_node = tf.placeholder(data_type(), shape=(BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
+    train_labels_node = tf.placeholder(tf.int64, shape=(BATCH_SIZE,))
+    eval_data = tf.placeholder(data_type(), shape=(EVAL_BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
 
     conv1_weights = tf.Variable(
         tf.truncated_normal([5, 5, NUM_CHANNELS, 32],
@@ -173,23 +183,48 @@ def main(_):
             hidden = tf.nn.dropout(hidden, 0.5, seed=SEED)
         return tf.matmul(hidden, fc2_weights) + fc2_biases
 
-    logits = model(train_data_node, True)
+    # Predictions for the test and validation, which we'll compute less often.
+    eval_prediction = tf.nn.softmax(model(eval_data))
 
-    train_prediction = tf.nn.softmax(logits)
+    # Small utility function to evaluate a dataset by feeding batches of data to
+    # {eval_data} and pulling the results from {eval_predictions}.
+    # Saves memory and enables this to run on smaller GPUs.
+    def eval_in_batches(data, sess):
+        """Get all predictions for a dataset by running it in small batches."""
+        size = data.shape[0]
+        if size < EVAL_BATCH_SIZE:
+            raise ValueError("batch size for evals larger than dataset: %d" % size)
+        predictions = numpy.ndarray(shape=(size, NUM_LABELS), dtype=numpy.float32)
+        for begin in range(0, size, EVAL_BATCH_SIZE):
+            end = begin + EVAL_BATCH_SIZE
+            if end <= size:
+                predictions[begin:end, :] = sess.run(
+                    eval_prediction,
+                    feed_dict={eval_data: data[begin:end, ...]})
+            else:
+                batch_predictions = sess.run(
+                    eval_prediction,
+                    feed_dict={eval_data: data[-EVAL_BATCH_SIZE:, ...]})
+                predictions[begin:, :] = batch_predictions[begin - size:, :]
+        return predictions
 
     # Create a local session to run the training.
     with tf.Session() as sess:
-        # Run all the initializers to prepare the trainable parameters.
-        tf.global_variables_initializer().run()
-        print('Initialized!')
         saver = tf.train.Saver()
-        saver.restore(sess, '../../models/tensorflow/MNIST/MNIST/mnist.ckpt')  # 这里使用了之前保存的模型参数
-        result = imageprepare()
-        prediction = tf.argmax(train_prediction, 1)
-        predint = prediction.eval(feed_dict={X: [result]}, session=sess)
+        # Run all the initializers to prepare the trainable parameters.
+        # sess.run(tf.global_variables_initializer())
+        saver.restore(sess, '../../models/tensorflow/MNIST/MNIST/mnist.ckpt')
+        print('Initialized!')
 
-        print('recognize result:')
-        print(predint[0])
+        # Loop through training steps.
+        print('Validation error: %.1f%%' % error_rate(
+                    eval_in_batches(validation_data, sess), validation_labels))
+        print(eval_in_batches(validation_data, sess))
+        sys.stdout.flush()
+
+        # Finally print the result!
+        test_error = error_rate(eval_in_batches(test_data, sess), test_labels)
+        print('Test error: %.1f%%' % test_error)
 
 
 if __name__ == '__main__':
@@ -207,3 +242,4 @@ if __name__ == '__main__':
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+

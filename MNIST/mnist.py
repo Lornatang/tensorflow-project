@@ -230,7 +230,7 @@ def main(_):
     start_time = time.time()
     with tf.Session() as sess:
         # Run all the initializers to prepare the trainable parameters.
-        tf.global_variables_initializer().run()
+        sess.run(tf.global_variables_initializer())
         print('Initialized!')
         saver = tf.train.Saver()
         # Loop through training steps.

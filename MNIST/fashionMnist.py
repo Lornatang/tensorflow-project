@@ -14,7 +14,7 @@ Improved code readability.
 """
 
 #                 |===============================================|               #
-#                 |                    New file                   |
+#                 |                    New file                   |               #
 #                 |===============================================|               #
 
 import argparse
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
 
     #                 |===============================================|               #
-    #                 |                    Old file                   |
+    #                 |                    Old file                   |               #
     #                 |===============================================|               #
 """
 import argparse
