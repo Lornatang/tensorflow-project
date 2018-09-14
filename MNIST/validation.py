@@ -114,7 +114,6 @@ def main(_):
         train_data, train_labels = fake_data(256)
         validation_data, validation_labels = fake_data(EVAL_BATCH_SIZE)
         test_data, test_labels = fake_data(EVAL_BATCH_SIZE)
-        num_epochs = 1
     else:
         # Get the data
         # Get the data.
@@ -132,13 +131,7 @@ def main(_):
         # Generate a validation set.
         validation_data = train_data[:VALIDATION_SIZE, ...]
         validation_labels = train_labels[:VALIDATION_SIZE]
-        train_data = train_data[VALIDATION_SIZE:, ...]
-        train_labels = train_labels[VALIDATION_SIZE:]
-        num_epochs = NUM_EPOCHS
-    train_size = train_labels.shape[0]
 
-    train_data_node = tf.placeholder(data_type(), shape=(BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
-    train_labels_node = tf.placeholder(tf.int64, shape=(BATCH_SIZE,))
     eval_data = tf.placeholder(data_type(), shape=(EVAL_BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
 
     conv1_weights = tf.Variable(
@@ -242,4 +235,3 @@ if __name__ == '__main__':
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
-
