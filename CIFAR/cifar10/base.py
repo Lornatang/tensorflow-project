@@ -30,7 +30,7 @@ https://arxiv.org/pdf/1605.07146v1.pdf
 import tensorflow as tf
 
 
-class Resnet(object):
+class ResNet(object):
 
     def __init__(self, is_training, data_format, batch_norm_decay, batch_norm_epsilon):
         """REsnet constructor.
