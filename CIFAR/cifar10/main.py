@@ -36,7 +36,7 @@ import itertools
 import os
 
 import cifar10
-import model
+import cifar10_model
 import utils
 import numpy as np
 import tensorflow as tf
@@ -225,7 +225,7 @@ def _tower_fn(is_training, weight_decay, feature, label, data_format,
       predictions.
 
     """
-    model = model.ResNetCifar10(
+    model = cifar10_model.ResNetCifar10(
         num_layers,
         batch_norm_decay=batch_norm_decay,
         batch_norm_epsilon=batch_norm_epsilon,

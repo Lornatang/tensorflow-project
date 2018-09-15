@@ -2,7 +2,7 @@
 
 # author: shiyipaisizuo
 # contact: shiyipaisizuo@gmail.com
-# file: model.py
+# file: cifar10_model.py
 # time: 2018/9/15 11:23
 # license: MIT
 

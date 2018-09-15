@@ -5,9 +5,8 @@
 # time: 2018/9/14 15:17
 # license: MIT
 """
-
 import collections
-
+import six
 import tensorflow as tf
 
 from tensorflow.python.platform import tf_logging as logging
@@ -20,6 +19,7 @@ from tensorflow.python.training import device_setter
 from tensorflow.contrib.learn.python.learn import run_config
 
 
+# TODO(b/64848083) Remove once uid bug is fixed
 class RunConfig(tf.contrib.learn.RunConfig):
     def uid(self, whitelist=None):
         """Generates a 'Unique Identifier' based on all internal fields.
@@ -51,7 +51,7 @@ class RunConfig(tf.contrib.learn.RunConfig):
                        key=lambda t: t[0])
             )
         return ', '.join(
-            '%s=%r' % (k, v) for (k, v) in iter(ordered_state))
+            '%s=%r' % (k, v) for (k, v) in six.iteritems(ordered_state))
 
 
 class ExamplesPerSecondHook(session_run_hook.SessionRunHook):
