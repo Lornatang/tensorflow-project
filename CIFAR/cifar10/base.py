@@ -47,7 +47,7 @@ class Resnet(object):
         self._data_format = data_format
 
     def forward_pass(self, x):
-        raise NotImplementedError(f"forward_pass() is implemented in Resnet sub classes.")
+        raise NotImplementedError("forward_pass() is implemented in Resnet sub classes.")
 
     def _conv(self, x, kernel_size, filters, strides, is_atrous=False):
         """Convolution."""
@@ -134,7 +134,7 @@ class Resnet(object):
 
             if in_filter != out_filter:
                 orig_x = self._avg_pool(orig_x, stride, stride)
-                pad = (out_filter-in_filter) // 2
+                pad = (out_filter - in_filter) // 2
                 if self._data_format == 'channels_first':
                     orig_x = tf.pad(orig_x, [[0, 0], [pad, pad], [0, 0], [0, 0]])
                 else:
@@ -144,4 +144,75 @@ class Resnet(object):
 
             tf.logging.info(f"image after unit {name_scope}, {x.get_shape()}")
 
+            return x
+
+    def _residual_v2(self,
+                     x,
+                     in_filter,
+                     out_filter,
+                     stride,
+                     activate_before_residual=False):
+        """Residual unit with 2 sub layers with preactivation"""
+
+        with tf.name_scope('residual_v2') as name_scope:
+            if activate_before_residual:
+                x = self._batch_norm(x)
+                x = self._relu(x)
+                orig_x = x
+            else:
+                orig_x = x
+                x = self._batch_norm(x)
+                x = self._relu(x)
+
+            x = self._conv(x, 3, out_filter, stride)
+
+            x = self._batch_norm(x)
+            x = self._relu(x)
+            x = self._conv(x, 3, out_filter, [1, 1, 1, 1])
+
+            if in_filter != out_filter:
+                pad = (out_filter - in_filter) // 2
+                orig_x = self._avg_pool(orig_x, stride, stride)
+                if self._data_format == 'channels_first':
+                    orig_x = tf.pad(orig_x, [[0, 0], [pad, pad], [0, 0], [0, 0]])
+                else:
+                    orig_x = tf.pad(orig_x, [[0]])
+
+            x = tf.add(x, orig_x)
+
+            tf.logging.info(f'image after unit {name_scope} {x.get_shape()}')
+            return x
+
+    def _bottleneck_residual_v2(self,
+                                x,
+                                in_filter,
+                                out_filter,
+                                stride,
+                                activate_before_residual=False):
+        with tf.name_scope('bottle_residual_v2') as name_scope:
+            if activate_before_residual:
+                x = self._batch_norm(x)
+                x = self._relu(x)
+                orig_x = x
+            else:
+                orig_x = x
+                x = self._batch_norm(x)
+                x = self._relu(x)
+
+            x = self._conv(x, 1, out_filter // 4, stride, is_atrous=True)
+
+            x = self._batch_norm(x)
+            x = self._relu(x)
+            # pad when stride isn't unit
+            x = self._conv(x, 3, out_filter // 4, 1, is_atrous=True)
+
+            x = self._batch_norm(x)
+            x = self._relu(x)
+            x = self._conv(x, 1, out_filter, 1, is_atrous=True)
+
+            if in_filter != out_filter:
+                orig_x = self._conv(orig_x, 1, out_filter, stride, is_atrous=True)
+            x = tf.add(x, orig_x)
+
+            tf.logging.info('image after unit %s: %s', name_scope, x.get_shape())
             return x
