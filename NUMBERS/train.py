@@ -17,27 +17,27 @@ import utils
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--path', type=str, default='../data/catdog/test',
-                    help="""image path. Default='../data/catdog/test'.""")
+parser.add_argument('--path', type=str, default='/tmp/numbers',
+                    help="""image path. Default='/tmp/numbers'.""")
 parser.add_argument('--epochs', type=int, default=20,
-                    help="""num epochs. Default=10""")
+                    help="""num epochs. Default=20""")
 parser.add_argument('--num_classes', type=int, default=2,
-                    help="""cat and dog. Default=2""")
+                    help="""0 and 1. Default=2""")
 parser.add_argument('--batch_size', type=int, default=64,
                     help="""batch size. Default=64""")
 parser.add_argument('--lr', type=float, default=0.0001,
                     help="""learing_rate. Default=0.0001""")
 parser.add_argument('--dropout', type=float, default=0.75,
                     help="""Dropout numbers. Default=0.75""")
-parser.add_argument('--model_path', type=str, default='../../model/tensorflow/',
+parser.add_argument('--model_path', type=str, default='/tmp/model/tf/',
                     help="""Save model path""")
-parser.add_argument('--model_name', type=str, default='catdog.ckpt',
+parser.add_argument('--model_name', type=str, default='numbers.ckpt',
                     help="""Model name""")
 parser.add_argument('--display_epoch', type=int, default=2)
 args = parser.parse_args()
 
 # tf input graph
-X = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
+X = tf.placeholder(tf.float32, shape=[None, 128, 128, 1])
 y = tf.placeholder(tf.float32, shape=[None, 2])
 keep_prob = tf.placeholder(tf.float32)  # drop(keep probability)
 
@@ -55,7 +55,7 @@ def max_pooling(image, k):
 
 
 weights = {
-    'wc1': tf.Variable(tf.random_normal([3, 3, 3, 32])),
+    'wc1': tf.Variable(tf.random_normal([3, 3, 1, 32])),
     'wc2': tf.Variable(tf.random_normal([3, 3, 32, 64])),
     'wd1': tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
     'out': tf.Variable(tf.random_normal([1024, args.num_classes]))
@@ -70,7 +70,7 @@ biases = {
 
 def net(x, _weights, _biases, _dropout):
     # Layer 1
-    x = tf.reshape(x, [-1, 128, 128, 3])
+    x = tf.reshape(x, [-1, 128, 128, 1])
     conv1 = conv2d(x, _weights['wc1'], _biases['bc1'])
     conv1 = max_pooling(conv1, k=2)
     conv1 = tf.nn.dropout(conv1, keep_prob=_dropout)

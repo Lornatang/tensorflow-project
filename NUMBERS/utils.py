@@ -22,9 +22,9 @@ def label_to_list(label):
 
 class LoadDataset(object):
     def __init__(self, filepath):
-        dogs = glob.glob(filepath + "/dog/*.jpg")
-        cats = glob.glob(filepath + "/cat/*.jpg")
-        classes = {0: cats, 1: dogs}
+        dogs = glob.glob(filepath + "/0/*.jpg")
+        cats = glob.glob(filepath + "/1/*.jpg")
+        classes = {0: '0', 1: '1'}
         self.data = []
         for item in classes:
             for filepath in classes[item]:
