@@ -17,30 +17,34 @@ Improved code readability.
 #                 |                    New file                   |
 #                 |===============================================|               #
 
-import argparse
-import gzip
-import os
-import urllib.request
+from utils import *
 
-import numpy
+import argparse
+import os
+
+import numpy as np
 import sys
 import tensorflow as tf
 import time
 
-SOURCE_URL = 'https://storage.googleapis.com/cvdf-datasets/mnist/'
-WORK_DIRECTORY = '../data/MNIST/MNIST/'
+
+MODEL_IDRECTORY = '../../models/tensorflow/MNIST/MNIST/'
 IMAGE_SIZE = 28
 NUM_CHANNELS = 1
 PIXEL_DEPTH = 255
 NUM_LABELS = 10
 VALIDATION_SIZE = 5000  # Size of the validation set.
 SEED = 66478  # Set to None for random seed.
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 NUM_EPOCHS = 10
-EVAL_BATCH_SIZE = 64
+EVAL_BATCH_SIZE = 128
 EVAL_FREQUENCY = 100  # Number of steps between evaluations.
 
 FLAGS = None
+
+
+if os.path.exists(MODEL_IDRECTORY):
+    os.makedirs(MODEL_IDRECTORY)
 
 
 def data_type():
@@ -51,49 +55,10 @@ def data_type():
         return tf.float32
 
 
-def download(filename):
-    """Download the data from Yann's website, unless it's already here."""
-    if not tf.gfile.Exists(WORK_DIRECTORY):
-        tf.gfile.MakeDirs(WORK_DIRECTORY)
-    filepath = os.path.join(WORK_DIRECTORY, filename)
-    if not tf.gfile.Exists(filepath):
-        filepath, _ = urllib.request.urlretrieve(SOURCE_URL + filename, filepath)
-        with tf.gfile.GFile(filepath) as f:
-            size = f.size()
-        print(f"Successfully downloaded {filename} size {size} bytes.")
-
-    return filepath
-
-
-def extract_data(filename, num_images):
-    """Extract the images into a 4D tensor [image index, y, x, channels].
-
-    Values are rescaled from [0, 255] down to [-0.5, 0.5].
-    """
-    print('Extracting', filename)
-    with gzip.open(filename) as bytestream:
-        bytestream.read(16)
-        buf = bytestream.read(IMAGE_SIZE * IMAGE_SIZE * num_images * NUM_CHANNELS)
-        data = numpy.frombuffer(buf, dtype=numpy.uint8).astype(numpy.float32)
-        data = (data - (PIXEL_DEPTH / 2.0)) / PIXEL_DEPTH
-        data = data.reshape(num_images, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)
-        return data
-
-
-def extract_labels(filename, num_images):
-    """Extract the labels into a vector of int64 label IDs."""
-    print('Extracting', filename)
-    with gzip.open(filename) as bytestream:
-        bytestream.read(8)
-        buf = bytestream.read(1 * num_images)
-        labels = numpy.frombuffer(buf, dtype=numpy.uint8).astype(numpy.int64)
-    return labels
-
-
 def fake_data(num_images):
-    data = numpy.ndarray(shape=(num_images, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS),
-                         dtype=numpy.float32)
-    labels = numpy.zeros(shape=(num_images,), dtype=numpy.int64)
+    data = np.ndarray(shape=(num_images, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS),
+                      dtype=np.float32)
+    labels = np.zeros(shape=(num_images,), dtype=np.int64)
     for image in range(num_images):
         label = image % 2
         data[image, :, :, 0] = label - 0.5
@@ -102,7 +67,8 @@ def fake_data(num_images):
 
 
 def error_rate(predictions, labels):
-    return 100.0 - (100.0 * numpy.sum(numpy.argmax(predictions, 1) == labels) / predictions.shape[0])
+    return 100.0 - (100.0 * np.sum(np.argmax(predictions, 1)
+                                   == labels) / predictions.shape[0])
 
 
 def main(_):
@@ -134,9 +100,21 @@ def main(_):
         num_epochs = NUM_EPOCHS
     train_size = train_labels.shape[0]
 
-    train_data_node = tf.placeholder(data_type(), shape=(BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
+    train_data_node = tf.placeholder(
+        data_type(),
+        shape=(
+            BATCH_SIZE,
+            IMAGE_SIZE,
+            IMAGE_SIZE,
+            NUM_CHANNELS))
     train_labels_node = tf.placeholder(tf.int64, shape=(BATCH_SIZE,))
-    eval_data = tf.placeholder(data_type(), shape=(EVAL_BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
+    eval_data = tf.placeholder(
+        data_type(),
+        shape=(
+            EVAL_BATCH_SIZE,
+            IMAGE_SIZE,
+            IMAGE_SIZE,
+            NUM_CHANNELS))
 
     conv1_weights = tf.Variable(
         tf.truncated_normal([5, 5, NUM_CHANNELS, 32],
@@ -162,18 +140,24 @@ def main(_):
         0.1, shape=[NUM_LABELS], dtype=data_type()))
 
     def model(data, train=False):
-        conv = tf.nn.conv2d(data, conv1_weights, strides=[1, 1, 1, 1], padding='SAME')
+        conv = tf.nn.conv2d(
+            data, conv1_weights, strides=[
+                1, 1, 1, 1], padding='SAME')
         relu = tf.nn.relu(tf.nn.bias_add(conv, conv1_biases))
         pool = tf.nn.max_pool(relu, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
                               padding='SAME')
 
-        conv = tf.nn.conv2d(pool, conv2_weights, strides=[1, 1, 1, 1], padding='SAME')
+        conv = tf.nn.conv2d(
+            pool, conv2_weights, strides=[
+                1, 1, 1, 1], padding='SAME')
         relu = tf.nn.relu(tf.nn.bias_add(conv, conv2_biases))
         pool = tf.nn.max_pool(relu, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
                               padding='SAME')
 
         pool_shape = pool.get_shape().as_list()
-        reshape = tf.reshape(pool, [pool_shape[0], pool_shape[1] * pool_shape[2] * pool_shape[3]])
+        reshape = tf.reshape(
+            pool, [
+                pool_shape[0], pool_shape[1] * pool_shape[2] * pool_shape[3]])
         hidden = tf.nn.relu(tf.matmul(reshape, fc1_weights) + fc1_biases)
 
         if train:
@@ -181,7 +165,10 @@ def main(_):
         return tf.matmul(hidden, fc2_weights) + fc2_biases
 
     logits = model(train_data_node, True)
-    loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=train_labels_node, logits=logits))
+    loss = tf.reduce_mean(
+        tf.nn.sparse_softmax_cross_entropy_with_logits(
+            labels=train_labels_node,
+            logits=logits))
 
     # L2 regularization for the fully connected parameters.
     regularizers = (tf.nn.l2_loss(fc1_weights) + tf.nn.l2_loss(fc1_biases) +
@@ -197,7 +184,9 @@ def main(_):
         0.95,
         staircase=True
     )
-    optimizer = tf.train.AdamOptimizer(learning_rate, 0.9).minimize(loss, global_step=batch)
+    optimizer = tf.train.AdamOptimizer(
+        learning_rate, 0.9).minimize(
+        loss, global_step=batch)
 
     train_prediction = tf.nn.softmax(logits)
 
@@ -211,8 +200,14 @@ def main(_):
         """Get all predictions for a dataset by running it in small batches."""
         size = data.shape[0]
         if size < EVAL_BATCH_SIZE:
-            raise ValueError("batch size for evals larger than dataset: %d" % size)
-        predictions = numpy.ndarray(shape=(size, NUM_LABELS), dtype=numpy.float32)
+            raise ValueError(
+                "batch size for evals larger than dataset: %d" %
+                size)
+        predictions = np.ndarray(
+            shape=(
+                size,
+                NUM_LABELS),
+            dtype=np.float32)
         for begin in range(0, size, EVAL_BATCH_SIZE):
             end = begin + EVAL_BATCH_SIZE
             if end <= size:
@@ -257,7 +252,11 @@ def main(_):
                       (step, float(step) * BATCH_SIZE / train_size,
                        1000 * elapsed_time / EVAL_FREQUENCY))
                 print('Minibatch loss: %.3f, learning rate: %.6f' % (l, lr))
-                print('Minibatch error: %.1f%%' % error_rate(predictions, batch_labels))
+                print(
+                    'Minibatch error: %.1f%%' %
+                    error_rate(
+                        predictions,
+                        batch_labels))
                 print('Validation error: %.1f%%' % error_rate(
                     eval_in_batches(validation_data, sess), validation_labels))
                 sys.stdout.flush()
@@ -286,116 +285,3 @@ if __name__ == '__main__':
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
-
-    #                 |===============================================|               #
-    #                 |                    Old file                   |
-    #                 |===============================================|               #
-"""
-import argparse
-
-import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
-# log
-tf.logging.set_verbosity(tf.logging.DEBUG)
-
-data = input_data.read_data_sets("../data/MNIST/MNIST/", one_hot=True)  # Load data
-
-# Parameters
-parser = argparse.ArgumentParser("Tensorflow mnist")
-parser.add_argument('--learning_rate', default=0.001)
-parser.add_argument('--epoch', default=200)
-parser.add_argument('--batch_size', default=128)
-parser.add_argument('--dis_epoch', default=2)
-# Network Parameters
-parser.add_argument('--img_size', default=784)
-parser.add_argument('--classes', default=10)
-parser.add_argument('--dropout', default=0.75)
-parser.add_argument('--model_path', default='../../models/tensorflow/MNIST/MNIST/MNIST.ckpt')
-args = parser.parse_args()
-
-# tf Graph input
-X = tf.placeholder(tf.float32, [None, args.img_size])
-y = tf.placeholder(tf.float32, [None, args.classes])
-keep_prob = tf.placeholder(tf.float32)  # drop(keep probability)
-
-
-# Create model
-def conv2d(image, w, b):
-    return tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(image, w, strides=[1, 1, 1, 1], padding='SAME'), b))
-
-
-def max_pooling(image, k):
-    return tf.nn.max_pool(image, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding='SAME')
-
-
-weights = {
-    'wc1': tf.Variable(tf.random_normal([3, 3, 1, 64])),
-    'wc2': tf.Variable(tf.random_normal([3, 3, 64, 128])),
-    'wd1': tf.Variable(tf.random_normal([7 * 7 * 128, 1024])),
-    'out': tf.Variable(tf.random_normal([1024, args.classes]))
-}
-biases = {
-    'bc1': tf.Variable(tf.random_normal([64])),
-    'bc2': tf.Variable(tf.random_normal([128])),
-    'bd1': tf.Variable(tf.random_normal([1024])),
-    'out': tf.Variable(tf.random_normal([args.classes]))
-}
-
-
-def conv_net(x, _weights, _biases, _dropout):
-    # Layer 1
-    x = tf.reshape(x, [-1, 28, 28, 1])
-    conv1 = conv2d(x, _weights['wc1'], _biases['bc1'])
-    conv1 = max_pooling(conv1, k=2)
-    conv1 = tf.nn.dropout(conv1, keep_prob=_dropout)
-    # Layer 2
-    conv2 = conv2d(conv1, _weights['wc2'], _biases['bc2'])
-    conv2 = max_pooling(conv2, k=2)
-    conv2 = tf.nn.dropout(conv2, keep_prob=_dropout)
-    # Fully Connected
-    dense1 = tf.reshape(conv2, [-1, _weights['wd1'].get_shape().as_list()[0]])
-    dense1 = tf.nn.relu(tf.add(tf.matmul(dense1, _weights['wd1']), _biases['bd1']))
-    dense1 = tf.nn.dropout(dense1, _dropout)
-    out = tf.add(tf.matmul(dense1, _weights['out']), _biases['out'])
-
-    return out
-
-
-# Construct model
-pred = conv_net(X, weights, biases, keep_prob)
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=pred))
-optimizer = tf.train.AdamOptimizer(learning_rate=args.learning_rate).minimize(cost)
-
-# Evaluate model
-correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-
-# create model save checkpoint
-saver = tf.train.Saver()
-
-with tf.Session() as sess:
-    saver.restore(sess, args.model_path)
-    # sess.run(tf.global_variables_initializer())
-    for step in range(1, args.epoch + 1):
-        batch_xs, batch_ys = data.train.next_batch(args.batch_size)
-        sess.run(optimizer, feed_dict={X: batch_xs,
-                                       y: batch_ys,
-                                       keep_prob: args.dropout})
-        if step % args.dis_epoch == 0 or step == 1:
-            acc = sess.run(accuracy, feed_dict={X: batch_xs,
-                                                y: batch_ys,
-                                                keep_prob: 1.})
-            loss = sess.run(cost, feed_dict={X: batch_xs,
-                                             y: batch_ys,
-                                             keep_prob: 1.})
-            print(f"Step [{step}/{args.epoch}], "
-                  f"Loss: {loss:.6f}, "
-                  f"Acc: {acc:.5f}")
-
-            saver.save(sess, args.model_path)
-
-    print("Optimization Finished!")
-    print("Testing Accuracy: ", sess.run(accuracy, feed_dict={X: data.test.images[:256],
-                                                              y: data.test.labels[:256],
-                                                              keep_prob: 1.}))
-"""
