@@ -1,5 +1,6 @@
 # TensorFlow Project
 
+Caution: This repo tutorial move to *https://github.com/lornatang/tensorflow-tutorial!*
 This is the project I did when I studied tensorflow.
 
 Most of them come from online cases.
@@ -43,6 +44,8 @@ The following examples are coming from [TFLearn](https://github.com/tflearn/tfle
 ## Tutorials
 
 - [TFLearn Quickstart](https://github.com/tflearn/tflearn/blob/master/tutorials/intro/quickstart.md). Learn the basics of TFLearn through a concrete machine learning task. Build and train a deep neural network classifier.
+
+- [My tensorflow tutorial](https://github.com/lornatang/tensorflow-tutorial/README.md).Welcome to fork my code.Thanks.
 
 ## Examples
 
