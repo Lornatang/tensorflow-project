@@ -43,7 +43,7 @@ EVAL_FREQUENCY = 100  # Number of steps between evaluations.
 FLAGS = None
 
 
-if os.path.exists(MODEL_IDRECTORY):
+if not os.path.exists(MODEL_IDRECTORY):
     os.makedirs(MODEL_IDRECTORY)
 
 
@@ -260,14 +260,12 @@ def main(_):
                 print('Validation error: %.1f%%' % error_rate(
                     eval_in_batches(validation_data, sess), validation_labels))
                 sys.stdout.flush()
-            saver.save(sess, '../../models/tensorflow/MNIST/MNIST/mnist.ckpt')
+            saver.save(sess, MODEL_IDRECTORY + 'mnist.ckpt')
         # Finally print the result!
         test_error = error_rate(eval_in_batches(test_data, sess), test_labels)
         print('Test error: %.1f%%' % test_error)
         if FLAGS.self_test:
             print('test_error', test_error)
-            assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (
-                test_error,)
 
 
 if __name__ == '__main__':
